@@ -19,7 +19,7 @@ open class Index {
         if ("DOC" == tag) println()
     }
 
-    fun word(tag: String) {
+    open fun word(tag: String) {
         print(tag)
     }
 }
