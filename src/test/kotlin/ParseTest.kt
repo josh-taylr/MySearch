@@ -12,7 +12,7 @@ class ParseTest {
         //given
         val parser = Parse()
         //when
-        val file = File("single_document.xml")
+        val file = File("/Users/Josh/Developer/Kotlin/WSJSearch/src/test/kotlin/single_document.xml")
         parser.parse(file)
         //then
         verify(index).startTag("DOC")
