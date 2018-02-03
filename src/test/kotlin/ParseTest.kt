@@ -10,9 +10,9 @@ class ParseTest {
     @Test
     fun `match start tag`() {
         //given
-        val parser = Parse()
+        val parser = Parse(index)
         //when
-        val file = File("/Users/Josh/Developer/Kotlin/WSJSearch/src/test/kotlin/single_document.xml")
+        val file = File("src/test/kotlin/single_document.xml")
         parser.parse(file)
         //then
         verify(index).startTag("DOC")
