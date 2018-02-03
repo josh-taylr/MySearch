@@ -12,7 +12,7 @@ open class Index {
         println("<$tag>")
     }
 
-    fun endTag(tag: String) {
+    open fun endTag(tag: String) {
         println("</$tag>")
 
         // leave a blank line between each document
