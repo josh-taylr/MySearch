@@ -47,6 +47,7 @@ class ParseTest {
         val file = File("src/test/kotlin/single_document.xml")
         parser.parse(file)
         //then
+        verify(index).word("<1>")
         verify(index).word("&")
     }
 }
