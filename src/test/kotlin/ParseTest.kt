@@ -24,7 +24,7 @@ class ParseTest {
     }
 
     @Test
-    fun `match word`() {
+    fun `match word in correct tags`() {
         //given
         val index = mock<Index>()
         val parser = Parse(index)
@@ -33,6 +33,8 @@ class ParseTest {
         val file = File("src/test/kotlin/single_document.xml")
         parser.parse(file)
         //then
-        verify(index).word("WSJ920102-0154")
+        inOrder.verify(index).startTag("DOCNO")
+        inOrder.verify(index).word("WSJ920102-0154")
+        inOrder.verify(index).endTag("DOCNO")
     }
 }
