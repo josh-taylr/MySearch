@@ -37,4 +37,16 @@ class ParseTest {
         inOrder.verify(index).word("WSJ920102-0154")
         inOrder.verify(index).endTag("DOCNO")
     }
+
+    @Test
+    fun `convert escape characters`() {
+        //given
+        val index = mock<Index>()
+        val parser = Parse(index)
+        //when
+        val file = File("src/test/kotlin/single_document.xml")
+        parser.parse(file)
+        //then
+        verify(index).word("&")
+    }
 }

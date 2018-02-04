@@ -9,17 +9,17 @@ open class Index {
     }
 
     open fun startTag(tag: String) {
-        print("<$tag>")
+        println("<$tag>")
     }
 
     open fun endTag(tag: String) {
-        print("</$tag>")
+        println("</$tag>")
 
         // leave a blank line between each document
         if ("DOC" == tag) println()
     }
 
     open fun word(term: String) {
-        print(term)
+        println(term)
     }
 }

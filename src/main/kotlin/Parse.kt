@@ -25,6 +25,8 @@ class Parse constructor(private val index: Index) {
                     END_TAG_ACCEPT -> index.endTag(sb.toString())
                     START_TAG_READ -> sb.append(c)
                     START_TAG_ACCEPT -> index.startTag(sb.toString())
+                    ESCAPE_AMP_TERMINAL -> acceptTerm('&')
+                    ESCAPE_LT_T -> acceptTerm('<')
                     FAILURE -> throw ParseException("Error parsing file.")
                     else -> Unit
                 }
@@ -37,6 +39,7 @@ class Parse constructor(private val index: Index) {
         INITIAL {
             override fun next(c: Char) = when (c) {
                 '<' -> TAG
+                '&' -> ESCAPE_INITIAL
                 else -> WORD
             }
         },
@@ -60,6 +63,7 @@ class Parse constructor(private val index: Index) {
         START_TAG_ACCEPT {
             override fun next(c: Char) = when (c) {
                 '<' -> TAG
+                '&' -> ESCAPE_INITIAL
                 else -> WORD
             }
         },
@@ -82,6 +86,66 @@ class Parse constructor(private val index: Index) {
         END_TAG_ACCEPT {
             override fun next(c: Char): State = when (c) {
                 '<' -> TAG
+                '&' -> ESCAPE_INITIAL
+                else -> WORD
+            }
+        },
+
+        ESCAPE_INITIAL {
+            override fun next(c: Char): State = when (c) {
+                'a' -> ESCAPE_AMP_A
+                'l' -> ESCAPE_LT_L
+                else -> FAILURE
+            }
+        },
+
+        ESCAPE_AMP_A {
+            override fun next(c: Char): State = when (c) {
+                'm' -> ESCAPE_AMP_M
+                else -> FAILURE
+            }
+        },
+
+        ESCAPE_AMP_M {
+            override fun next(c: Char): State = when (c) {
+                'p' -> ESCAPE_AMP_P
+                else -> FAILURE
+            }
+        },
+
+        ESCAPE_AMP_P {
+            override fun next(c: Char): State = when (c) {
+                ';' -> ESCAPE_AMP_TERMINAL
+                else -> FAILURE
+            }
+        },
+
+        ESCAPE_AMP_TERMINAL {
+            override fun next(c: Char): State = when (c) {
+                '<' -> TAG
+                '&' -> ESCAPE_INITIAL
+                else -> WORD
+            }
+        },
+
+        ESCAPE_LT_L {
+            override fun next(c: Char): State = when(c) {
+                't' -> ESCAPE_LT_T
+                else -> FAILURE
+            }
+        },
+
+        ESCAPE_LT_T {
+            override fun next(c: Char): State = when (c) {
+                ';' -> ESCAPE_LT_TERMINAL
+                else -> FAILURE
+            }
+        },
+
+        ESCAPE_LT_TERMINAL {
+            override fun next(c: Char): State = when (c) {
+                '<' -> TAG
+                '&' -> ESCAPE_INITIAL
                 else -> WORD
             }
         },
@@ -89,6 +153,7 @@ class Parse constructor(private val index: Index) {
         WORD {
             override fun next(c: Char) = when (c) {
                 '<' -> TAG
+                '&' -> ESCAPE_INITIAL
                 else -> WORD
             }
         },
