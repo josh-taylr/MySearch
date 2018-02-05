@@ -1,10 +1,10 @@
 open class Index {
 
-    fun beginIndexing() {
+    open fun beginIndexing() {
 
     }
 
-    fun endIndexing() {
+    open fun endIndexing() {
 
     }
 

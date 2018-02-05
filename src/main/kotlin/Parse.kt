@@ -11,6 +11,7 @@ class Parse constructor(private val index: Index) {
 
         file.bufferedReader().use {
             var state = INITIAL
+            index.beginIndexing()
             while (true) {
                 val c = it.read().toChar()
                 if (EOF == c) break
@@ -29,6 +30,7 @@ class Parse constructor(private val index: Index) {
                     ESCAPE_LT_T -> acceptTerm('<')
                 }
             }
+            index.endIndexing()
         }
     }
 

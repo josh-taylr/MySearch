@@ -50,4 +50,33 @@ class ParseTest {
         verify(index).word("<1>")
         verify(index).word("&")
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun `parser notifies indexer before parsing begins`() {
+        //given
+        val index = mock<Index>()
+        val parse = Parse(index)
+        val inOrder = inOrder(index)
+        //when
+        val file = File("src/test/kotlin/single_document.xml")
+        parse.parse(file)
+        //then
+        inOrder.verify(index).beginIndexing()
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun `parser notifies indexer after parsing ends`() {
+        //given
+        val index = mock<Index>()
+        val parse = Parse(index)
+        val inOrder = inOrder(index)
+        //when
+        val file = File("src/test/kotlin/single_document.xml")
+        parse.parse(file)
+        //then
+        inOrder.verify(index).endIndexing()
+        inOrder.verifyNoMoreInteractions()
+    }
 }
