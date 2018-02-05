@@ -7,11 +7,11 @@ class Parse constructor(private val index: Index) {
     private val EOF = (-1).toChar()
 
     fun parse(file: File) {
-        var sb = StringBuilder()
+        val sb = StringBuilder()
 
         file.bufferedReader().use {
             var state = INITIAL
-            do {
+            while (true) {
                 val c = it.read().toChar()
                 if (EOF == c) break
                 state = state.next(c)
@@ -19,7 +19,7 @@ class Parse constructor(private val index: Index) {
                     WORD -> acceptTerm(c)
                     TAG -> {
                         acceptTerm(' ') // hack to
-                        sb = StringBuilder()
+                        sb.setLength(0)
                     }
                     END_TAG_READ -> sb.append(c)
                     END_TAG_ACCEPT -> index.endTag(sb.toString())
@@ -27,10 +27,8 @@ class Parse constructor(private val index: Index) {
                     START_TAG_ACCEPT -> index.startTag(sb.toString())
                     ESCAPE_AMP_TERMINAL -> acceptTerm('&')
                     ESCAPE_LT_T -> acceptTerm('<')
-                    FAILURE -> throw ParseException("Error parsing file.")
-                    else -> Unit
                 }
-            } while (state != FAILURE)
+            }
         }
     }
 
@@ -48,7 +46,7 @@ class Parse constructor(private val index: Index) {
             override fun next(c: Char) = when {
                 '/' == c -> END_TAG
                 c.isLetter() -> START_TAG_READ
-                else -> FAILURE
+                else -> throw ParseException("Parse error. Expected '/' or letter. Got '$c'.")
             }
         },
 
@@ -56,7 +54,7 @@ class Parse constructor(private val index: Index) {
             override fun next(c: Char) = when {
                 c.isLetterOrDigit() -> START_TAG_READ
                 c == '>' -> START_TAG_ACCEPT
-                else -> FAILURE
+                else -> throw ParseException("Parse error. Expected letter, digit, or '>'. Got '$c'.")
             }
         },
 
@@ -71,7 +69,7 @@ class Parse constructor(private val index: Index) {
         END_TAG {
             override fun next(c: Char) = when {
                 c.isLetter() -> END_TAG_READ
-                else -> FAILURE
+                else -> throw ParseException("Parse error. Expected a letter. Got '$c'.")
             }
         },
 
@@ -79,7 +77,7 @@ class Parse constructor(private val index: Index) {
             override fun next(c: Char): State = when {
                 c.isLetterOrDigit() -> END_TAG_READ
                 c == '>' -> END_TAG_ACCEPT
-                else -> FAILURE
+                else -> throw ParseException("Parse error. Expected letter, digit, or '>'. Got '$c'.")
             }
         },
 
@@ -92,31 +90,31 @@ class Parse constructor(private val index: Index) {
         },
 
         ESCAPE_INITIAL {
-            override fun next(c: Char): State = when (c) {
-                'a' -> ESCAPE_AMP_A
-                'l' -> ESCAPE_LT_L
-                else -> FAILURE
+            override fun next(c: Char): State = when {
+                'a' == c -> ESCAPE_AMP_A
+                'l' == c -> ESCAPE_LT_L
+                c.isWhitespace() -> WORD
+                else -> throw ParseException("Parse error. Expected 'a' or 'l'. Got '$c'.")
             }
         },
 
         ESCAPE_AMP_A {
             override fun next(c: Char): State = when (c) {
                 'm' -> ESCAPE_AMP_M
-                else -> FAILURE
+                else -> throw ParseException("Parse error. Expected 'm'. Got '$c'.")
             }
         },
-
         ESCAPE_AMP_M {
             override fun next(c: Char): State = when (c) {
                 'p' -> ESCAPE_AMP_P
-                else -> FAILURE
+                else -> throw ParseException("Parse error. Expected 'p'. Got '$c'.")
             }
         },
 
         ESCAPE_AMP_P {
             override fun next(c: Char): State = when (c) {
                 ';' -> ESCAPE_AMP_TERMINAL
-                else -> FAILURE
+                else -> throw ParseException("Parse error. Expected ';'. Got '$c'.")
             }
         },
 
@@ -131,14 +129,14 @@ class Parse constructor(private val index: Index) {
         ESCAPE_LT_L {
             override fun next(c: Char): State = when(c) {
                 't' -> ESCAPE_LT_T
-                else -> FAILURE
+                else -> throw ParseException("Parse error. Expected 't'. Got '$c'.")
             }
         },
 
         ESCAPE_LT_T {
             override fun next(c: Char): State = when (c) {
                 ';' -> ESCAPE_LT_TERMINAL
-                else -> FAILURE
+                else -> throw ParseException("Parse error. Expected ';'. Got '$c'.")
             }
         },
 
@@ -156,10 +154,6 @@ class Parse constructor(private val index: Index) {
                 '&' -> ESCAPE_INITIAL
                 else -> WORD
             }
-        },
-
-        FAILURE {
-            override fun next(c: Char): State = FAILURE
         };
 
         abstract fun next(c: Char): State
@@ -171,13 +165,14 @@ class Parse constructor(private val index: Index) {
     }
 
     private var termState = NOT_IN_WORD
-    private var termBuilder = StringBuilder()
+    private val termBuilder = StringBuilder()
 
     private fun acceptTerm(c: Char) {
         when (termState) {
             NOT_IN_WORD -> {
                 if (!c.isWhitespace()) {
-                    termBuilder = StringBuilder().append(c)
+                    termBuilder.setLength(0)
+                    termBuilder.append(c)
                     termState = IN_WORD
                 }
             }

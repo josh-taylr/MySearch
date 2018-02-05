@@ -1,5 +1,5 @@
 import java.io.File
 
 fun main(args: Array<String>) {
-    Parse(Index()).parse(File("src/test/kotlin/single_document.xml"))
+    Parse(Index()).parse(File("/Users/Josh/Documents/wsj.xml"))
 }
