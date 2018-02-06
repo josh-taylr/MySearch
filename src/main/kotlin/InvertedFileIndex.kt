@@ -36,7 +36,7 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
 
             // add term to dictionary when not present
             if (postings == null) {
-                postings = Postings(ArrayList())
+                postings = Postings(mutableSetOf())
                 map[term] = postings
             }
 
@@ -62,4 +62,4 @@ data class Dictionary(private val records: Collection<Pair<String, Postings>> = 
     }
 }
 
-data class Postings(val documents: ArrayList<String>)
+data class Postings(val documents: MutableSet<String>)

@@ -12,7 +12,7 @@ fun main(args: Array<String>) {
         return
     }
 
-    Parse(InvertFileIndex(indexWriter), documentCount = 1).parse(File("/Users/Josh/Documents/wsj.xml"))
+    Parse(InvertFileIndex(indexWriter), documentCount = 10).parse(File("/Users/Josh/Documents/wsj.xml"))
 }
 
 private class GrammarIndex : Index {

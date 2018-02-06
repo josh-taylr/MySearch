@@ -54,7 +54,22 @@ class InvertedFileIndexTest {
         index.endIndexing()
         //then
         val expected = Dictionary(listOf(
-                Pair(TERM, Postings(arrayListOf(DOCUMENT_NUMBER)))
+                Pair(TERM, Postings(mutableSetOf(DOCUMENT_NUMBER)))
+        ))
+        verify(indexWriter).invoke(expected)
+    }
+
+    @Test
+    fun `a posting contain a document only once`() {
+        //given
+        indexDocumentNumber(DOCUMENT_NUMBER)
+        indexTerm(TERM)
+        indexTerm(TERM)
+        //when
+        index.endIndexing()
+        //then
+        val expected = Dictionary(listOf(
+                Pair(TERM, Postings(mutableSetOf(DOCUMENT_NUMBER)))
         ))
         verify(indexWriter).invoke(expected)
     }
