@@ -34,7 +34,7 @@ class IndexTest {
         //when
         index.endIndexing()
         //then
-        verify(indexWriter, never()).invoke(any())
+        verify(indexWriter).invoke(Dictionary())
     }
 
     @Test

@@ -3,7 +3,7 @@ import java.util.*
 /*
     Build a concordance (inverted file) from terms passed between doc tags.
  */
-open class Index(indexWriter: (Dictionary) -> Unit) {
+open class Index(val indexWriter: (Dictionary) -> Unit) {
 
     open fun beginIndexing() {
 
