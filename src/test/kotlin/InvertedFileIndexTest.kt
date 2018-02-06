@@ -74,6 +74,19 @@ class InvertedFileIndexTest {
         verify(indexWriter).invoke(expected)
     }
 
+    @Test
+    fun `a term inside text tags should be cleaned`() {
+        //given
+        indexDocumentNumber(DOCUMENT_NUMBER)
+        indexTerm("Hello")
+        //when
+        index.endIndexing()
+        val expected = Dictionary(listOf(
+                Pair("hello", Postings(mutableSetOf(DOCUMENT_NUMBER)))
+        ))
+        verify(indexWriter).invoke(expected)
+    }
+
     private fun indexDocumentNumber(documentNumber: String) {
         index.startTag("DOCNO")
         index.word(documentNumber)

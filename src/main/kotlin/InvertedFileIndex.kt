@@ -1,5 +1,4 @@
 import java.util.*
-import kotlin.collections.ArrayList
 
 /*
     Build a concordance (inverted file) from terms passed between doc tags.
@@ -32,18 +31,11 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
         if ("DOCNO" == tags.peek()) {
             documentNumber = term
         } else if ("TEXT" == tags.peek()) {
-            var postings = map[term]
+            cleanTerm(term)?.let { clean: String ->
+                if (null == documentNumber) throw IllegalStateException("Adding term from unknown document")
 
-            // add term to dictionary when not present
-            if (postings == null) {
-                postings = Postings(mutableSetOf())
-                map[term] = postings
-            }
-
-            if (null != documentNumber) {
+                val postings = map.getOrPut(clean) { Postings(mutableSetOf()) }
                 postings.documents.add(documentNumber!!)
-            } else {
-                throw IllegalStateException("Adding term from unknown document")
             }
         }
     }
