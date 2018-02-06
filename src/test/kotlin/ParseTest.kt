@@ -11,7 +11,7 @@ class ParseTest {
     private val index = mock<Index>()
     private val inOrder = inOrder(index)
 
-    lateinit var parser: Parse
+    private lateinit var parser: Parse
 
     @Before
     fun setUp() {
