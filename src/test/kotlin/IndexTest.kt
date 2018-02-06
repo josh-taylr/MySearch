@@ -1,6 +1,4 @@
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.After
 import org.junit.Before
@@ -56,7 +54,7 @@ class IndexTest {
         index.endIndexing()
         //then
         val expected = Dictionary(listOf(
-                Pair(TERM, Postings(listOf(DOCUMENT_NUMBER)))
+                Pair(TERM, Postings(arrayListOf(DOCUMENT_NUMBER)))
         ))
         verify(indexWriter).invoke(expected)
     }
