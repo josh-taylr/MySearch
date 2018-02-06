@@ -15,6 +15,12 @@ mainClassName = 'AppKt'
 
 defaultTasks 'run'
 
+run {
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
+    }
+}
+
 repositories {
     mavenCentral()
 }
