@@ -1,10 +1,12 @@
 import Parse.State.*
 import Parse.TERM_STATE.*
 import java.io.File
+import java.util.*
 
 class Parse constructor(private val index: Index) {
 
     private val EOF = (-1).toChar()
+    private val tags = Stack<String>()
 
     fun parse(file: File) {
         val sb = StringBuilder()
@@ -23,9 +25,18 @@ class Parse constructor(private val index: Index) {
                         sb.setLength(0)
                     }
                     END_TAG_READ -> sb.append(c)
-                    END_TAG_ACCEPT -> index.endTag(sb.toString())
+                    END_TAG_ACCEPT -> {
+                        val new = sb.toString()
+                        val current = tags.pop()
+                        if (new != current) throw TagMismatchException("Expected '$current' new, but encountered '$new'")
+                        index.endTag(new)
+                    }
                     START_TAG_READ -> sb.append(c)
-                    START_TAG_ACCEPT -> index.startTag(sb.toString())
+                    START_TAG_ACCEPT -> {
+                        val tag = sb.toString()
+                        index.startTag(tag)
+                        tags.push(tag)
+                    }
                     ESCAPE_AMP_TERMINAL -> acceptTerm('&')
                     ESCAPE_LT_T -> acceptTerm('<')
                 }
@@ -191,5 +202,6 @@ class Parse constructor(private val index: Index) {
 
     companion object {
         class ParseException(message: String?) : Exception(message)
+        class TagMismatchException(message: String?) : Exception(message)
     }
 }

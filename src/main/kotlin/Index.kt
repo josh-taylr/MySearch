@@ -25,8 +25,7 @@ open class Index(private val indexWriter: (Dictionary) -> Unit) {
     }
 
     open fun endTag(tag: String) {
-        val current = tags.pop()
-        if (tag != current) throw TagMismatchException("Expected '$current' tag, but encountered '$tag'")
+        tags.pop()
     }
 
     open fun word(term: String) {
@@ -49,8 +48,6 @@ open class Index(private val indexWriter: (Dictionary) -> Unit) {
         }
     }
 }
-
-class TagMismatchException(message: String?) : Exception(message)
 
 data class Dictionary(private val records: Collection<Pair<String, Postings>> = emptyList()) :
         Iterable<Pair<String, Postings>> {

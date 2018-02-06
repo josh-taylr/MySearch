@@ -2,8 +2,12 @@ import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import java.io.File
+import org.junit.rules.ExpectedException
+
+
 
 class ParseTest {
 
@@ -12,6 +16,10 @@ class ParseTest {
     private val inOrder = inOrder(index)
 
     private lateinit var parser: Parse
+
+    @Rule
+    @JvmField
+    val thrown = ExpectedException.none()!!
 
     @Before
     fun setUp() {
@@ -64,5 +72,14 @@ class ParseTest {
         //then
         inOrder.verify(index).endIndexing()
         inOrder.verifyNoMoreInteractions()
+    }
+
+    @Test
+    fun `throws exception when tags don't match`() {
+        //given
+        thrown.expect(Parse.Companion.TagMismatchException::class.java)
+        thrown.expectMessage("Expected 'DOCNO' new, but encountered 'DOC'")
+        //when
+        parser.parse(File("src/test/kotlin/mismatched_tags.xml"))
     }
 }
