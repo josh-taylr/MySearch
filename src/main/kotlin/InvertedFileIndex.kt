@@ -4,31 +4,31 @@ import kotlin.collections.ArrayList
 /*
     Build a concordance (inverted file) from terms passed between doc tags.
  */
-open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) {
+open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Index {
 
     private val map = TreeMap<String, Postings>()
     private val tags = Stack<String>()
 
     private var documentNumber: String? = null
 
-    open fun beginIndexing() {
+    override fun beginIndexing() {
 
     }
 
-    open fun endIndexing() {
+    override fun endIndexing() {
         indexWriter(Dictionary(map.entries.map { Pair(it.key, it.value) }))
         map.clear()
     }
 
-    open fun startTag(tag: String) {
+    override fun startTag(tag: String) {
         tags.push(tag)
     }
 
-    open fun endTag(tag: String) {
+    override fun endTag(tag: String) {
         tags.pop()
     }
 
-    open fun word(term: String) {
+    override fun word(term: String) {
         if ("DOCNO" == tags.peek()) {
             documentNumber = term
         } else if ("TEXT" == tags.peek()) {
