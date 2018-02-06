@@ -66,8 +66,8 @@ class InvertedFileIndexTest {
     }
 
     private fun indexTerm(term: String) {
-        index.startTag("P")
+        index.startTag("TEXT")
         index.word(term)
-        index.endTag("P")
+        index.endTag("TEXT")
     }
 }
