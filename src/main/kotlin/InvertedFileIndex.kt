@@ -4,7 +4,7 @@ import kotlin.collections.ArrayList
 /*
     Build a concordance (inverted file) from terms passed between doc tags.
  */
-open class Index(private val indexWriter: (Dictionary) -> Unit) {
+open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) {
 
     private val map = TreeMap<String, Postings>()
     private val tags = Stack<String>()

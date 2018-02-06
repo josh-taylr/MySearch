@@ -5,5 +5,5 @@ private val indexWriter: (Dictionary) -> Unit = {
 }
 
 fun main(args: Array<String>) {
-    Parse(Index(indexWriter), documentCount = 1).parse(File("/Users/Josh/Documents/wsj.xml"))
+    Parse(InvertFileIndex(indexWriter), documentCount = 1).parse(File("/Users/Josh/Documents/wsj.xml"))
 }

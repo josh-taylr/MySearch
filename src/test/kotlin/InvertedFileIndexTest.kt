@@ -4,11 +4,11 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class IndexTest {
+class InvertedFileIndexTest {
 
     private val indexWriter: (Dictionary) -> Unit = mock()
 
-    private lateinit var index: Index
+    private lateinit var index: InvertFileIndex
 
     companion object {
         const val DOCUMENT_NUMBER = "WSJ920102-0154"
@@ -18,7 +18,7 @@ class IndexTest {
     @Before
     fun setUp() {
         //given
-        index = Index(indexWriter)
+        index = InvertFileIndex(indexWriter)
         index.beginIndexing()
     }
 

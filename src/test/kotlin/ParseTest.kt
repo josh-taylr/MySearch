@@ -12,7 +12,7 @@ import org.junit.rules.ExpectedException
 class ParseTest {
 
     private val file = File("src/test/kotlin/single_document.xml")
-    private val index = mock<Index>()
+    private val index = mock<InvertFileIndex>()
     private val inOrder = inOrder(index)
 
     private lateinit var parser: Parse

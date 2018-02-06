@@ -3,7 +3,7 @@ import Parse.TERM_STATE.*
 import java.io.File
 import java.util.*
 
-class Parse constructor(private val index: Index, val documentCount: Int = Int.MAX_VALUE) {
+class Parse constructor(private val index: InvertFileIndex, val documentCount: Int = Int.MAX_VALUE) {
 
     private val EOF = (-1).toChar()
     private val tags = Stack<String>()
