@@ -31,7 +31,7 @@ open class Index(private val indexWriter: (Dictionary) -> Unit) {
     open fun word(term: String) {
         if ("DOCNO" == tags.peek()) {
             documentNumber = term
-        } else if ("P" == tags.peek()) {
+        } else if ("TEXT" == tags.peek()) {
             var postings = map[term]
 
             // add term to dictionary when not present
@@ -58,7 +58,7 @@ data class Dictionary(private val records: Collection<Pair<String, Postings>> = 
     }
 
     override fun iterator(): Iterator<Pair<String, Postings>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return map.entries.map { Pair(it.key, it.value) }.iterator()
     }
 }
 

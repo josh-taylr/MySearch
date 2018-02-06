@@ -3,10 +3,12 @@ import Parse.TERM_STATE.*
 import java.io.File
 import java.util.*
 
-class Parse constructor(private val index: Index) {
+class Parse constructor(private val index: Index, val documentCount: Int = Int.MAX_VALUE) {
 
     private val EOF = (-1).toChar()
     private val tags = Stack<String>()
+
+    private var documentsParsed = 0
 
     fun parse(file: File) {
         val sb = StringBuilder()
@@ -14,7 +16,7 @@ class Parse constructor(private val index: Index) {
         file.bufferedReader().use {
             var state = INITIAL
             index.beginIndexing()
-            while (true) {
+            while (documentsParsed < documentCount) {
                 val c = it.read().toChar()
                 if (EOF == c) break
                 state = state.next(c)
@@ -28,6 +30,7 @@ class Parse constructor(private val index: Index) {
                     END_TAG_ACCEPT -> {
                         val new = sb.toString()
                         val current = tags.pop()
+                        if (new == "DOC") documentsParsed++
                         if (new != current) throw TagMismatchException("Expected '$current' new, but encountered '$new'")
                         index.endTag(new)
                     }
