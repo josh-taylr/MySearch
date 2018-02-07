@@ -13,6 +13,13 @@ class Dictionary : Iterable<Pair<String, Dictionary.Postings>> {
         return this
     }
 
+    fun search(vararg term: String): List<String> {
+        return term.mapNotNull { map[it] }
+                .map { it.documents }
+                .reduce({acc, documents -> acc.intersect(documents) as MutableSet<String> })
+                .toList()
+    }
+
     override fun iterator(): Iterator<Pair<String, Postings>> {
         return map.entries.map { Pair(it.key, it.value) }.iterator()
     }
@@ -24,8 +31,8 @@ class Dictionary : Iterable<Pair<String, Dictionary.Postings>> {
 
     override fun hashCode(): Int = map.hashCode()
 
-    class Postings {
-        private val documents = mutableSetOf<String>()
+    class Postings(val documents: MutableSet<String> = mutableSetOf()) {
+
         fun add(documentNumber: String): Postings {
             documents.add(documentNumber)
             return this

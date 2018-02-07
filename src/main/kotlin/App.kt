@@ -2,17 +2,17 @@ import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
 
-private val indexWriter: (Dictionary) -> Unit = {
-    it.forEach { (term, postings) -> println("$term -> $postings") }
-}
-
 fun main(args: Array<String>) {
     if (args.contains("--grammar")) {
         Parse(GrammarIndex()).parse(File("/Users/Josh/Documents/wsj.xml"))
         return
     }
 
-    Parse(InvertFileIndex(indexWriter)).parse(File("/Users/Josh/Documents/wsj.xml"))
+    val indexListener: (Dictionary) -> Unit = { dictionary: Dictionary ->
+        dictionary.search(*args).forEach { println(it) }
+    }
+
+    indexListener.let { Parse(InvertFileIndex(it)).parse(File("/Users/Josh/Documents/wsj.xml")) }
 }
 
 private class GrammarIndex : Index {
