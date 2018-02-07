@@ -1,3 +1,4 @@
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.After
@@ -53,9 +54,7 @@ class InvertedFileIndexTest {
         //when
         index.endIndexing()
         //then
-        val expected = Dictionary(listOf(
-                Pair(TERM, Postings(mutableSetOf(DOCUMENT_NUMBER)))
-        ))
+        val expected = Dictionary().add(documentNumber = DOCUMENT_NUMBER, term = TERM)
         verify(indexWriter).invoke(expected)
     }
 
@@ -68,9 +67,7 @@ class InvertedFileIndexTest {
         //when
         index.endIndexing()
         //then
-        val expected = Dictionary(listOf(
-                Pair(TERM, Postings(mutableSetOf(DOCUMENT_NUMBER)))
-        ))
+        val expected = Dictionary().add(documentNumber = DOCUMENT_NUMBER, term = TERM)
         verify(indexWriter).invoke(expected)
     }
 
@@ -81,10 +78,24 @@ class InvertedFileIndexTest {
         indexTerm("Hello")
         //when
         index.endIndexing()
-        val expected = Dictionary(listOf(
-                Pair("hello", Postings(mutableSetOf(DOCUMENT_NUMBER)))
-        ))
-        verify(indexWriter).invoke(expected)
+        verify(indexWriter).invoke(Dictionary().add(documentNumber = DOCUMENT_NUMBER, term = "hello"))
+    }
+
+    @Test
+    fun `needs to clear index between collections`() {
+        //given
+        val inOrder = inOrder(indexWriter)
+        indexDocumentNumber(DOCUMENT_NUMBER)
+        indexTerm(TERM)
+        index.endIndexing()
+        //when
+        index.beginIndexing()
+        indexDocumentNumber(DOCUMENT_NUMBER)
+        indexTerm("hello")
+        index.endIndexing()
+        //then
+        inOrder.verify(indexWriter).invoke(Dictionary().add(documentNumber = DOCUMENT_NUMBER, term = TERM))
+        inOrder.verify(indexWriter).invoke(Dictionary().add(documentNumber = DOCUMENT_NUMBER, term = "hello"))
     }
 
     private fun indexDocumentNumber(documentNumber: String) {

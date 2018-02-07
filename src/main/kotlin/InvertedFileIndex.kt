@@ -5,9 +5,9 @@ import java.util.*
  */
 open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Index {
 
-    private val map = TreeMap<String, Postings>()
     private val tags = Stack<String>()
 
+    private var dictionary = Dictionary()
     private var documentNumber: String? = null
 
     override fun beginIndexing() {
@@ -15,8 +15,8 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
     }
 
     override fun endIndexing() {
-        indexWriter(Dictionary(map.entries.map { Pair(it.key, it.value) }))
-        map.clear()
+        indexWriter(dictionary)
+        dictionary = Dictionary()
     }
 
     override fun startTag(tag: String) {
@@ -32,26 +32,9 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
             documentNumber = term
         } else if ("TEXT" == tags.peek()) {
             cleanTerm(term)?.let { clean: String ->
-                if (null == documentNumber) throw IllegalStateException("Adding term from unknown document")
-
-                val postings = map.getOrPut(clean) { Postings(mutableSetOf()) }
-                postings.documents.add(documentNumber!!)
+                if (null == documentNumber) throw IllegalStateException("Adding te rm from unknown document")
+                dictionary.add(documentNumber = documentNumber!!, term = clean)
             }
         }
     }
 }
-
-data class Dictionary(private val records: Collection<Pair<String, Postings>> = emptyList()) :
-        Iterable<Pair<String, Postings>> {
-    private val map = TreeMap<String, Postings>()
-
-    init {
-        map.putAll(records)
-    }
-
-    override fun iterator(): Iterator<Pair<String, Postings>> {
-        return map.entries.map { Pair(it.key, it.value) }.iterator()
-    }
-}
-
-data class Postings(val documents: MutableSet<String>)
