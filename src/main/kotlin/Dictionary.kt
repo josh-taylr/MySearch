@@ -15,8 +15,7 @@ class Dictionary : Iterable<Pair<String, Dictionary.Postings>> {
 
     fun search(vararg term: String): List<String> {
         return term.mapNotNull { map[it] }
-                .map { it.documents }
-                .reduce({acc, documents -> acc.intersect(documents) as MutableSet<String> })
+                .reduce({acc, postings -> acc.and(postings)})
                 .toList()
     }
 
@@ -31,12 +30,18 @@ class Dictionary : Iterable<Pair<String, Dictionary.Postings>> {
 
     override fun hashCode(): Int = map.hashCode()
 
-    class Postings(val documents: MutableSet<String> = mutableSetOf()) {
+    class Postings private constructor(private val documents: MutableSet<String>) : Iterable<String> {
+
+        constructor() : this(mutableSetOf())
 
         fun add(documentNumber: String): Postings {
             documents.add(documentNumber)
             return this
         }
+
+        fun and(other: Postings): Postings = Postings(documents.intersect(other) as MutableSet<String>)
+
+        fun or(other: Postings): Postings = Postings(documents.union(other) as MutableSet<String>)
 
         override fun equals(other: Any?): Boolean = when(other) {
             is Postings -> documents == other.documents
@@ -47,6 +52,10 @@ class Dictionary : Iterable<Pair<String, Dictionary.Postings>> {
 
         override fun toString(): String {
             return documents.toString()
+        }
+
+        override fun iterator(): Iterator<String> {
+            return documents.iterator()
         }
     }
 }
