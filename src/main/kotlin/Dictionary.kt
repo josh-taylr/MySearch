@@ -3,9 +3,7 @@ import java.util.*
 /*
     An inverted file index containing a list of terms with with corresponding postings.
  */
-class Dictionary : Iterable<Pair<String, Dictionary.Postings>> {
-
-    private val map = TreeMap<String, Postings>()
+class Dictionary(val map: TreeMap<String, Postings> = TreeMap()) : Iterable<Pair<String, Dictionary.Postings>> {
 
     fun add(documentNumber: String, term: String): Dictionary {
         val postings = map.getOrPut(term) { Postings() }
@@ -19,10 +17,6 @@ class Dictionary : Iterable<Pair<String, Dictionary.Postings>> {
                 .toList()
     }
 
-    override fun iterator(): Iterator<Pair<String, Postings>> {
-        return map.entries.map { Pair(it.key, it.value) }.iterator()
-    }
-
     override fun equals(other: Any?): Boolean = when (other) {
         is Dictionary -> map == other.map
         else -> false
@@ -30,7 +24,13 @@ class Dictionary : Iterable<Pair<String, Dictionary.Postings>> {
 
     override fun hashCode(): Int = map.hashCode()
 
-    class Postings private constructor(private val documents: MutableSet<String>) : Iterable<String> {
+    override fun toString(): String = map.toString()
+
+    override fun iterator(): Iterator<Pair<String, Postings>> {
+        return map.entries.map { Pair(it.key, it.value) }.iterator()
+    }
+
+    class Postings internal constructor(private val documents: MutableSet<String>) : Iterable<String> {
 
         constructor() : this(mutableSetOf())
 
@@ -50,9 +50,7 @@ class Dictionary : Iterable<Pair<String, Dictionary.Postings>> {
 
         override fun hashCode(): Int = documents.hashCode()
 
-        override fun toString(): String {
-            return documents.toString()
-        }
+        override fun toString(): String = documents.toString()
 
         override fun iterator(): Iterator<String> {
             return documents.iterator()

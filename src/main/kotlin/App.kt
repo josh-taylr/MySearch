@@ -1,3 +1,5 @@
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
 import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
@@ -8,11 +10,28 @@ fun main(args: Array<String>) {
         return
     }
 
-    val indexListener: (Dictionary) -> Unit = { dictionary: Dictionary ->
-        dictionary.search(*args).forEach { println(it) }
+    val dictionaryFileStream = DictionaryFileStream()
+    val dictionaryFile = File("out/index/dictionary.dat")
+    var dictionary: Dictionary? = null
+
+    if (args.contains("--build") || !dictionaryFile.exists()) {
+        dictionaryFile.delete()
+        dictionaryFile.outputStream().buffered().use { stream: BufferedOutputStream ->
+            println("Build index...")
+            Parse(InvertFileIndex({ result: Dictionary ->
+                dictionary = result
+                dictionaryFileStream.write(result, stream)
+            }), documentCount = 20000).parse(File("/Users/Josh/Documents/wsj.xml"))
+        }
     }
 
-    indexListener.let { Parse(InvertFileIndex(it)).parse(File("/Users/Josh/Documents/wsj.xml")) }
+    if (null == dictionary) {
+        dictionaryFile.inputStream().buffered().use { stream: BufferedInputStream ->
+            dictionary = dictionaryFileStream.read(stream)
+        }
+    }
+
+    dictionary!!.search(*args.filterNot { it.contains('-') }.toTypedArray()).forEach { println(it) }
 }
 
 private class GrammarIndex : Index {
