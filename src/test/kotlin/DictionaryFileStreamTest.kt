@@ -2,6 +2,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.DataOutputStream
 
 class DictionaryFileStreamTest {
 
@@ -11,7 +12,25 @@ class DictionaryFileStreamTest {
             .add("WSJ920102-0155", "search")
             .add("WSJ920102-0155", "engine")
 
-    private val dictionaryBytes = "engine WSJ920102-0155 index WSJ920102-0154 search WSJ920102-0154 WSJ920102-0155 "
+    private val bytes = ByteArrayOutputStream().also {
+        DataOutputStream(it).run {
+            writeByte(6)
+            writeBytes("engine")
+            writeInt(1)
+            writeLong(9201020155L)
+
+            writeByte(5)
+            writeBytes("index")
+            writeInt(1)
+            writeLong(9201020154L)
+
+            writeByte(6)
+            writeBytes("search")
+            writeInt(2)
+            writeLong(9201020154L)
+            writeLong(9201020155L)
+        }
+    }.toByteArray()
 
     @Test
     fun write() {
@@ -20,16 +39,36 @@ class DictionaryFileStreamTest {
         //when
         DictionaryFileStream().write(dictionary, stream)
         //then
-        assertEquals(dictionaryBytes, stream.toString())
+        assertArrayEquals(bytes, stream.toByteArray())
     }
 
     @Test
     fun read() {
         //given
-        val stream = ByteArrayInputStream(dictionaryBytes.toByteArray())
+        val stream = ByteArrayInputStream(bytes)
         //when
         val result = DictionaryFileStream().read(stream)
         //then
-        assertEquals(result, dictionary)
+        assertEquals(dictionary, result)
     }
+
+//    @Test
+//    fun convertDocumentNumber() {
+//        //given
+//        val posting = "WSJ920102-0154"
+//        //when
+//        val value = documentNumberToLong(posting)
+//        //then
+//        assertEquals(9201020154L, value)
+//    }
+//
+//    @Test
+//    fun convertLong() {
+//        //given
+//        val value = 9201020154L
+//        //when
+//        val result = longToDocumentNumber(value)
+//        //then
+//        assertEquals("WSJ920102-0154", result)
+//    }
 }
