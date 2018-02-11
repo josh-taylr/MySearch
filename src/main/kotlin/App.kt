@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
             Parse(InvertFileIndex({ result: Dictionary ->
                 dictionary = result
                 dictionaryFileStream.write(result, stream)
-            }), documentCount = 20000).parse(File("/Users/Josh/Documents/wsj.xml"))
+            }), documentCount = Int.MAX_VALUE).parse(File("/Users/Josh/Documents/wsj.xml"))
         }
     }
 

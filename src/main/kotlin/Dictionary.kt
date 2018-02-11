@@ -5,13 +5,13 @@ import java.util.*
  */
 class Dictionary(val map: TreeMap<String, Postings> = TreeMap()) : Iterable<Pair<String, Dictionary.Postings>> {
 
-    fun add(documentNumber: String, term: String): Dictionary {
+    fun add(documentNumber: DocumentNumber, term: String): Dictionary {
         val postings = map.getOrPut(term) { Postings() }
         postings.add(documentNumber)
         return this
     }
 
-    fun search(vararg term: String): List<String> {
+    fun search(vararg term: String): List<DocumentNumber> {
         return term.mapNotNull { map[it] }
                 .reduce({acc, postings -> acc.and(postings)})
                 .toList()
@@ -30,18 +30,18 @@ class Dictionary(val map: TreeMap<String, Postings> = TreeMap()) : Iterable<Pair
         return map.entries.map { Pair(it.key, it.value) }.iterator()
     }
 
-    class Postings internal constructor(private val documents: MutableSet<String>) : Iterable<String> {
+    class Postings internal constructor(private val documents: MutableSet<DocumentNumber>) : Iterable<DocumentNumber> {
 
         constructor() : this(mutableSetOf())
 
-        fun add(documentNumber: String): Postings {
+        fun add(documentNumber: DocumentNumber): Postings {
             documents.add(documentNumber)
             return this
         }
 
-        fun and(other: Postings): Postings = Postings(documents.intersect(other) as MutableSet<String>)
+        fun and(other: Postings): Postings = Postings(documents.intersect(other) as MutableSet<DocumentNumber>)
 
-        fun or(other: Postings): Postings = Postings(documents.union(other) as MutableSet<String>)
+        fun or(other: Postings): Postings = Postings(documents.union(other) as MutableSet<DocumentNumber>)
 
         override fun equals(other: Any?): Boolean = when(other) {
             is Postings -> documents == other.documents
@@ -52,7 +52,7 @@ class Dictionary(val map: TreeMap<String, Postings> = TreeMap()) : Iterable<Pair
 
         override fun toString(): String = documents.toString()
 
-        override fun iterator(): Iterator<String> {
+        override fun iterator(): Iterator<DocumentNumber> {
             return documents.iterator()
         }
     }

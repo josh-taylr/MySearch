@@ -16,7 +16,7 @@ class DictionaryFileStream {
                 // number of posting to read
                 writeInt(postings.count())
                 // sequence of longs
-                postings.forEach { writeLong(documentNumberToLong(it)) }
+                postings.forEach { writeLong(it.value) }
             }
         }
     }
@@ -34,7 +34,11 @@ class DictionaryFileStream {
                 val count = readInt()
                 // read sequence of longs
                 val postings = Dictionary.Postings()
-                repeat(count) { postings.add(longToDocumentNumber(readLong())) }
+                repeat(count) {
+                    val value = readLong()
+                    val documentNumber = DocumentNumber(value)
+                    postings.add(documentNumber)
+                }
 
                 map[term] = postings
             }
@@ -42,19 +46,7 @@ class DictionaryFileStream {
         return Dictionary(map)
     }
 
-    private fun longToDocumentNumber(value: Long): String {
-        val result = Companion.numberPattern.find(value.toString()) ?: throw IllegalStateException()
-        return result.destructured.let { (start, end) -> "WSJ$start-$end" }
-    }
-
-    private fun documentNumberToLong(posting: String): Long {
-        val result = Companion.documentPattern.find(posting) ?: throw IllegalStateException()
-        return result.destructured.let { (start, second) -> start + second }.toLong()
-    }
-
     companion object {
-        private val numberPattern = Regex("(\\p{Digit}{6})(\\p{Digit}{4})")
-        private val documentPattern = Regex("WSJ(\\p{Digit}{6})-(\\p{Digit}{4})")
         const val EOF = -1
     }
 }

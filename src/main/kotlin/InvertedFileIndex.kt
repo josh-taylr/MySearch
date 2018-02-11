@@ -8,7 +8,7 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
     private val tags = Stack<String>()
 
     private var dictionary = Dictionary()
-    private var documentNumber: String? = null
+    private var documentNumber: DocumentNumber? = null
 
     override fun beginIndexing() {
 
@@ -29,11 +29,11 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
 
     override fun word(term: String) {
         if ("DOCNO" == tags.peek()) {
-            documentNumber = term
+            documentNumber = DocumentNumber.parse(term)
         } else if ("TEXT" == tags.peek()) {
             cleanTerm(term)?.let { clean: String ->
                 if (null == documentNumber) throw IllegalStateException("Adding te rm from unknown document")
-                dictionary.add(documentNumber = documentNumber!!, term = clean)
+                dictionary.add(documentNumber!!, term = clean)
             }
         }
     }

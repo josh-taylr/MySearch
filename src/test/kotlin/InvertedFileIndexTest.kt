@@ -54,7 +54,7 @@ class InvertedFileIndexTest {
         //when
         index.endIndexing()
         //then
-        val expected = Dictionary().add(documentNumber = DOCUMENT_NUMBER, term = TERM)
+        val expected = Dictionary().add(DocumentNumber.parse(DOCUMENT_NUMBER), term = TERM)
         verify(indexWriter).invoke(expected)
     }
 
@@ -67,7 +67,7 @@ class InvertedFileIndexTest {
         //when
         index.endIndexing()
         //then
-        val expected = Dictionary().add(documentNumber = DOCUMENT_NUMBER, term = TERM)
+        val expected = Dictionary().add(DocumentNumber.parse(DOCUMENT_NUMBER), term = TERM)
         verify(indexWriter).invoke(expected)
     }
 
@@ -78,7 +78,7 @@ class InvertedFileIndexTest {
         indexTerm("Hello")
         //when
         index.endIndexing()
-        verify(indexWriter).invoke(Dictionary().add(documentNumber = DOCUMENT_NUMBER, term = "hello"))
+        verify(indexWriter).invoke(Dictionary().add(DocumentNumber.parse(DOCUMENT_NUMBER), term = "hello"))
     }
 
     @Test
@@ -94,8 +94,8 @@ class InvertedFileIndexTest {
         indexTerm("hello")
         index.endIndexing()
         //then
-        inOrder.verify(indexWriter).invoke(Dictionary().add(documentNumber = DOCUMENT_NUMBER, term = TERM))
-        inOrder.verify(indexWriter).invoke(Dictionary().add(documentNumber = DOCUMENT_NUMBER, term = "hello"))
+        inOrder.verify(indexWriter).invoke(Dictionary().add(DocumentNumber.parse(DOCUMENT_NUMBER), term = TERM))
+        inOrder.verify(indexWriter).invoke(Dictionary().add(DocumentNumber.parse(DOCUMENT_NUMBER), term = "hello"))
     }
 
     private fun indexDocumentNumber(documentNumber: String) {

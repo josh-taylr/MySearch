@@ -7,10 +7,10 @@ import java.io.DataOutputStream
 class DictionaryFileStreamTest {
 
     private val dictionary = Dictionary()
-            .add("WSJ920102-0154", "index")
-            .add("WSJ920102-0154", "search")
-            .add("WSJ920102-0155", "search")
-            .add("WSJ920102-0155", "engine")
+            .add(DocumentNumber.parse("WSJ920102-0154"), "index")
+            .add(DocumentNumber.parse("WSJ920102-0154"), "search")
+            .add(DocumentNumber.parse("WSJ920102-0155"), "search")
+            .add(DocumentNumber.parse("WSJ920102-0155"), "engine")
 
     private val bytes = ByteArrayOutputStream().also {
         DataOutputStream(it).run {
