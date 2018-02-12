@@ -30,18 +30,20 @@ class Dictionary(val map: TreeMap<String, Postings> = TreeMap()) : Iterable<Pair
         return map.entries.map { Pair(it.key, it.value) }.iterator()
     }
 
-    class Postings internal constructor(private val documents: MutableSet<DocumentNumber>) : Iterable<DocumentNumber> {
+    class Postings internal constructor(private val documents: MutableList<DocumentNumber>) : Iterable<DocumentNumber> {
 
-        constructor() : this(mutableSetOf())
+        constructor() : this(mutableListOf<DocumentNumber>())
 
         fun add(documentNumber: DocumentNumber): Postings {
-            documents.add(documentNumber)
+            if (documentNumber != documents.lastOrNull()) {
+                documents.add(documentNumber)
+            }
             return this
         }
 
-        fun and(other: Postings): Postings = Postings(documents.intersect(other) as MutableSet<DocumentNumber>)
+        fun and(other: Postings): Postings = Postings(intersect(other).toMutableList())
 
-        fun or(other: Postings): Postings = Postings(documents.union(other) as MutableSet<DocumentNumber>)
+        fun or(other: Postings): Postings = Postings(union(other).toMutableList())
 
         override fun equals(other: Any?): Boolean = when(other) {
             is Postings -> documents == other.documents
