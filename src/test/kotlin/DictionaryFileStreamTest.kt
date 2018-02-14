@@ -51,24 +51,4 @@ class DictionaryFileStreamTest {
         //then
         assertEquals(dictionary, result)
     }
-
-//    @Test
-//    fun convertDocumentNumber() {
-//        //given
-//        val posting = "WSJ920102-0154"
-//        //when
-//        val value = documentNumberToLong(posting)
-//        //then
-//        assertEquals(9201020154L, value)
-//    }
-//
-//    @Test
-//    fun convertLong() {
-//        //given
-//        val value = 9201020154L
-//        //when
-//        val result = longToDocumentNumber(value)
-//        //then
-//        assertEquals("WSJ920102-0154", result)
-//    }
 }
