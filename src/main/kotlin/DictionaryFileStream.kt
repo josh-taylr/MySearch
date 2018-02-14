@@ -39,7 +39,6 @@ class DictionaryFileStream : DictionaryWriter {
                     val documentNumber = DocumentNumber(value)
                     postings.add(documentNumber)
                 }
-
                 map[term] = postings
             }
         }
@@ -47,6 +46,6 @@ class DictionaryFileStream : DictionaryWriter {
     }
 
     companion object {
-        const val EOF = -1
+        private const val EOF = -1
     }
 }
