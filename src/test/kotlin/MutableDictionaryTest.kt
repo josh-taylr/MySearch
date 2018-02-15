@@ -1,7 +1,7 @@
 import org.junit.Assert.*
 import org.junit.Test
 
-class DictionaryTest {
+class MutableDictionaryTest {
 
     private val documentNumber = "WSJ920102-0154"
     private val term1 = "index"
@@ -10,7 +10,7 @@ class DictionaryTest {
     @Test
     fun `same dictionary should be equal`() {
         //given
-        val dictionary = Dictionary().add(DocumentNumber.parse(documentNumber), term1)
+        val dictionary = MutableDictionary().add(DocumentNumber.parse(documentNumber), term1)
         //when
         val result = dictionary == dictionary
         //then
@@ -20,8 +20,8 @@ class DictionaryTest {
     @Test
     fun `matching dictionaries should be equal`() {
         //given
-        val dictionary1 = Dictionary().add(DocumentNumber.parse(documentNumber), term1)
-        val dictionary2 = Dictionary().add(DocumentNumber.parse(documentNumber), term1)
+        val dictionary1 = MutableDictionary().add(DocumentNumber.parse(documentNumber), term1)
+        val dictionary2 = MutableDictionary().add(DocumentNumber.parse(documentNumber), term1)
         //when
         val result = dictionary1 == dictionary2
         //then
@@ -31,8 +31,8 @@ class DictionaryTest {
     @Test
     fun `different dictionaries shouldn't be equal`() {
         //given
-        val dictionary1 = Dictionary().add(DocumentNumber.parse(documentNumber), term1)
-        val dictionary2 = Dictionary().add(DocumentNumber.parse(documentNumber), term2)
+        val dictionary1 = MutableDictionary().add(DocumentNumber.parse(documentNumber), term1)
+        val dictionary2 = MutableDictionary().add(DocumentNumber.parse(documentNumber), term2)
         //when
         val result = dictionary1 == dictionary2
         //then

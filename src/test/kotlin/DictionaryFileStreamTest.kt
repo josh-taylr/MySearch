@@ -6,7 +6,7 @@ import java.io.DataOutputStream
 
 class DictionaryFileStreamTest {
 
-    private val dictionary = Dictionary()
+    private val dictionary = MutableDictionary()
             .add(DocumentNumber.parse("WSJ920102-0154"), "index")
             .add(DocumentNumber.parse("WSJ920102-0154"), "search")
             .add(DocumentNumber.parse("WSJ920102-0155"), "search")

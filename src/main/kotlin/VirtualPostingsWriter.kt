@@ -36,7 +36,7 @@ class VirtualPostingsWriter : DictionaryWriter {
     }
 
     override fun read(stream: InputStream): Dictionary {
-        val map: TreeMap<String, InMemoryPostings> = TreeMap()
+        val map: TreeMap<String, VirtualPostings> = TreeMap()
         DataInputStream(stream).run {
             // read dictionary offset and move file pointer
             val dictionaryOffset = readLong()
@@ -48,7 +48,7 @@ class VirtualPostingsWriter : DictionaryWriter {
                 val term = ByteArray(length).also(::readFully).let { String(it) }
                 val postingsLocation = readLong()
                 val postingsCount = readInt()
-                map[term] = VirtualPostings(postingsLocation, postingsCount)
+                map[term] = VirtualPostings( ,postingsLocation, postingsCount)
             }
         }
         return Dictionary(map)
