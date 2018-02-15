@@ -3,7 +3,7 @@ import java.util.*
 /*
     An inverted file index containing a list of terms with with corresponding postings.
  */
-class Dictionary(val map: TreeMap<String, InMemoryPostings> = TreeMap()) : Iterable<Pair<String, InMemoryPostings>> {
+class Dictionary(val map: TreeMap<String, InMemoryPostings> = TreeMap()) : Iterable<Pair<String, Postings>> {
 
     fun add(documentNumber: DocumentNumber, term: String): Dictionary {
         val postings = map.getOrPut(term) { InMemoryPostings() }
@@ -12,7 +12,7 @@ class Dictionary(val map: TreeMap<String, InMemoryPostings> = TreeMap()) : Itera
     }
 
     fun search(vararg term: String): List<DocumentNumber> {
-        return term.mapNotNull { map[it] }
+        return term.mapNotNull { map[it] as Postings}
                 .reduce({acc, postings -> acc.and(postings)})
                 .toList()
     }

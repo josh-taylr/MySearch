@@ -1,4 +1,6 @@
 interface Postings : Iterable<DocumentNumber> {
-    fun and(other: InMemoryPostings): InMemoryPostings
-    fun or(other: InMemoryPostings): InMemoryPostings
+
+    fun and(other: Postings): Postings
+
+    fun or(other: Postings): Postings
 }
