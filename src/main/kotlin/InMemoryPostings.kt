@@ -1,4 +1,4 @@
-class InMemoryPostings internal constructor(private val documents: MutableList<DocumentNumber>) : Iterable<DocumentNumber> {
+class InMemoryPostings internal constructor(private val documents: MutableList<DocumentNumber>) : Postings {
 
     constructor() : this(mutableListOf<DocumentNumber>())
 
@@ -9,9 +9,9 @@ class InMemoryPostings internal constructor(private val documents: MutableList<D
         return this
     }
 
-    fun and(other: InMemoryPostings): InMemoryPostings = InMemoryPostings(intersect(other).toMutableList())
+    override fun and(other: InMemoryPostings): InMemoryPostings = InMemoryPostings(intersect(other).toMutableList())
 
-    fun or(other: InMemoryPostings): InMemoryPostings = InMemoryPostings(union(other).toMutableList())
+    override fun or(other: InMemoryPostings): InMemoryPostings = InMemoryPostings(union(other).toMutableList())
 
     override fun equals(other: Any?): Boolean = when(other) {
         is InMemoryPostings -> documents == other.documents
