@@ -22,7 +22,7 @@ class DictionaryFileStream : DictionaryWriter {
     }
 
     override fun read(stream: InputStream): Dictionary {
-        val map: TreeMap<String, Postings> = TreeMap()
+        val map: TreeMap<String, InMemoryPostings> = TreeMap()
         DataInputStream(stream).run {
             while (true) {
                 // read number of bytes to read the term
@@ -33,7 +33,7 @@ class DictionaryFileStream : DictionaryWriter {
                 // read number of postings
                 val count = readInt()
                 // read sequence of longs
-                val postings = Postings()
+                val postings = InMemoryPostings()
                 repeat(count) {
                     val value = readLong()
                     val documentNumber = DocumentNumber(value)

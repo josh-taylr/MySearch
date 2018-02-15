@@ -1,20 +1,20 @@
-class Postings internal constructor(private val documents: MutableList<DocumentNumber>) : Iterable<DocumentNumber> {
+class InMemoryPostings internal constructor(private val documents: MutableList<DocumentNumber>) : Iterable<DocumentNumber> {
 
     constructor() : this(mutableListOf<DocumentNumber>())
 
-    fun add(documentNumber: DocumentNumber): Postings {
+    fun add(documentNumber: DocumentNumber): InMemoryPostings {
         if (documentNumber != documents.lastOrNull()) {
             documents.add(documentNumber)
         }
         return this
     }
 
-    fun and(other: Postings): Postings = Postings(intersect(other).toMutableList())
+    fun and(other: InMemoryPostings): InMemoryPostings = InMemoryPostings(intersect(other).toMutableList())
 
-    fun or(other: Postings): Postings = Postings(union(other).toMutableList())
+    fun or(other: InMemoryPostings): InMemoryPostings = InMemoryPostings(union(other).toMutableList())
 
     override fun equals(other: Any?): Boolean = when(other) {
-        is Postings -> documents == other.documents
+        is InMemoryPostings -> documents == other.documents
         else -> false
     }
 
