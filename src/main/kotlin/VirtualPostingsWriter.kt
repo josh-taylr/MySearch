@@ -1,8 +1,5 @@
-import java.io.DataInputStream
 import java.io.DataOutputStream
-import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
 
 class VirtualPostingsWriter : DictionaryWriter {
 
@@ -33,28 +30,5 @@ class VirtualPostingsWriter : DictionaryWriter {
                 postingLoc += count * 8L // Long = 8 bytes
             }
         }
-    }
-
-    override fun read(stream: InputStream): Dictionary {
-        val map: TreeMap<String, VirtualPostings> = TreeMap()
-        DataInputStream(stream).run {
-            // read dictionary offset and move file pointer
-            val dictionaryOffset = readLong()
-            stream.skip(dictionaryOffset)
-            // read the sequence of terms with the location and length of their postings
-            while (true) {
-                val length = read() // number of bytes to read this term
-                if (EOF == length) break
-                val term = ByteArray(length).also(::readFully).let { String(it) }
-                val postingsLocation = readLong()
-                val postingsCount = readInt()
-                map[term] = VirtualPostings( ,postingsLocation, postingsCount)
-            }
-        }
-        return Dictionary(map)
-    }
-
-    companion object {
-        private const val EOF = -1
     }
 }

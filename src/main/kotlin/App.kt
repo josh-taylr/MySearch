@@ -1,6 +1,6 @@
-import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
+import java.io.RandomAccessFile
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -10,7 +10,6 @@ fun main(args: Array<String>) {
         return
     }
 
-    val dictionaryFileStream = DictionaryFileStream()
     val dictionaryFile = File("out/index/dictionary.dat")
     var dictionary: Dictionary? = null
 
@@ -20,18 +19,19 @@ fun main(args: Array<String>) {
             println("Build index...")
             Parse(InvertFileIndex({ result: Dictionary ->
                 dictionary = result
-                dictionaryFileStream.write(result, stream)
+                VirtualPostingsWriter().write(result, stream)
             }), documentCount = Int.MAX_VALUE).parse(File("/Users/Josh/Documents/wsj.xml"))
         }
     }
 
+    val accessFile = RandomAccessFile(dictionaryFile, "r")
     if (null == dictionary) {
-        dictionaryFile.inputStream().buffered().use { stream: BufferedInputStream ->
-            dictionary = dictionaryFileStream.read(stream)
-        }
+        dictionary = VirtualPostingsReader(accessFile).read()
     }
 
     dictionary!!.search(*args.filterNot { it.contains('-') }.toTypedArray()).forEach { println(it) }
+
+    accessFile.close()
 }
 
 private class GrammarIndex : Index {

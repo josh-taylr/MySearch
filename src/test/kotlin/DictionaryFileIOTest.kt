@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 
-class DictionaryFileStreamTest {
+class DictionaryFileIOTest {
 
     private val dictionary = MutableDictionary()
             .add(DocumentNumber.parse("WSJ920102-0154"), "index")
@@ -37,7 +37,7 @@ class DictionaryFileStreamTest {
         //given
         val stream = ByteArrayOutputStream()
         //when
-        DictionaryFileStream().write(dictionary, stream)
+        DictionaryStreamWriter().write(dictionary, stream)
         //then
         assertArrayEquals(bytes, stream.toByteArray())
     }
@@ -47,7 +47,7 @@ class DictionaryFileStreamTest {
         //given
         val stream = ByteArrayInputStream(bytes)
         //when
-        val result = DictionaryFileStream().read(stream)
+        val result = DictionaryStreamReader().read(stream)
         //then
         assertEquals(dictionary, result)
     }

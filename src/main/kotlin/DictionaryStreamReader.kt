@@ -1,25 +1,8 @@
 import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.io.InputStream
-import java.io.OutputStream
 import java.util.*
 
-class DictionaryFileStream : DictionaryWriter {
-
-    override fun write(dictionary: Dictionary, stream: OutputStream) {
-        DataOutputStream(stream).run {
-            for ((term, postings) in dictionary) {
-                // bytes in this term
-                write(term.length)
-                // byte array of the term
-                writeBytes(term)
-                // number of posting to read
-                writeInt(postings.count())
-                // sequence of longs
-                postings.forEach { writeLong(it.value) }
-            }
-        }
-    }
+class DictionaryStreamReader : DictionaryReader {
 
     override fun read(stream: InputStream): Dictionary {
         val map: TreeMap<String, InMemoryPostings> = TreeMap()

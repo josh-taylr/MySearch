@@ -1,11 +1,11 @@
 interface Index {
-    open fun beginIndexing()
+    fun beginIndexing()
 
-    open fun endIndexing()
+    fun endIndexing()
 
-    open fun startTag(tag: String)
+    fun startTag(tag: String)
 
-    open fun endTag(tag: String)
+    fun endTag(tag: String)
 
-    open fun word(term: String)
+    fun word(term: String)
 }
