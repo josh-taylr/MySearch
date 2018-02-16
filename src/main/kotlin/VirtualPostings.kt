@@ -1,27 +1,14 @@
-import java.io.RandomAccessFile
+class VirtualPostings(private val postingReader: PostingsFileReader,
+                      private val location: Long,
+                      private val count: Int) : Postings() {
 
-/**
- * @param randomAccessFile To be closed by the provider
- */
-data class VirtualPostings(private val randomAccessFile: RandomAccessFile,
-                           private val location: Long,
-                           private val count: Int) :  Postings {
-
-    private val postings: Set<DocumentNumber> by lazy {
-        randomAccessFile.run {
-            seek(location)
-            val set = mutableSetOf<DocumentNumber>()
-            repeat(count) {
-                val number = DocumentNumber(readLong())
-                set.add(number)
-            }
-            return@run set
-        }
+    override val postings: Set<DocumentNumber> by lazy {
+        postingReader.read(location, count)
     }
 
-    override fun and(other: Postings): Postings = InMemoryPostings(intersect(other).toMutableList())
+    override fun and(other: Postings): Postings = InMemoryPostings(postings.intersect(other.postings) as MutableSet<DocumentNumber>)
 
-    override fun or(other: Postings): Postings = InMemoryPostings(union(other).toMutableList())
+    override fun or(other: Postings): Postings = InMemoryPostings(union(other) as MutableSet<DocumentNumber>)
 
     override fun iterator(): Iterator<DocumentNumber> = postings.iterator()
 }

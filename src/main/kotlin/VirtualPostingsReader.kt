@@ -1,14 +1,15 @@
-import java.io.RandomAccessFile
+import java.io.DataInputStream
+import java.io.InputStream
 import java.util.*
 
-class VirtualPostingsReader(private val file: RandomAccessFile) {
+class VirtualPostingsReader(private val reader: PostingsFileReader) : DictionaryReader {
 
-    fun read(): Dictionary {
+    override fun read(stream: InputStream): Dictionary {
         val map: TreeMap<String, VirtualPostings> = TreeMap()
-        file.run {
+        DataInputStream(stream).run {
             // read dictionary offset and move file pointer
             val dictionaryOffset = readLong()
-            seek(dictionaryOffset)
+            skip(dictionaryOffset)
             // read the sequence of terms with the location and length of their postings
             while (true) {
                 val length = read() // number of bytes to read this term
@@ -16,7 +17,7 @@ class VirtualPostingsReader(private val file: RandomAccessFile) {
                 val term = ByteArray(length).also(::readFully).let { String(it) }
                 val postingsLocation = readLong()
                 val postingsCount = readInt()
-                map[term] = VirtualPostings(file, postingsLocation, postingsCount)
+                map[term] = VirtualPostings(reader, postingsLocation, postingsCount)
             }
         }
         return Dictionary(map)

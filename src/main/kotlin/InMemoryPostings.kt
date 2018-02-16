@@ -1,17 +1,15 @@
-data class InMemoryPostings internal constructor(private val documents: MutableList<DocumentNumber>) : Postings {
+class InMemoryPostings internal constructor(override val postings: MutableSet<DocumentNumber>) : Postings() {
 
-    constructor() : this(mutableListOf<DocumentNumber>())
+    constructor() : this(mutableSetOf<DocumentNumber>())
 
     fun add(documentNumber: DocumentNumber): InMemoryPostings {
-        if (documentNumber != documents.lastOrNull()) {
-            documents.add(documentNumber)
-        }
+        postings.add(documentNumber)
         return this
     }
 
-    override fun and(other: Postings): Postings = InMemoryPostings(intersect(other).toMutableList())
+    override fun and(other: Postings): Postings = InMemoryPostings(postings.intersect(other.postings) as MutableSet<DocumentNumber>)
 
-    override fun or(other: Postings): Postings = InMemoryPostings(union(other).toMutableList())
+    override fun or(other: Postings): Postings = InMemoryPostings(postings.union(other.postings) as MutableSet<DocumentNumber>)
 
-    override fun iterator(): Iterator<DocumentNumber> = documents.iterator()
+    override fun iterator(): Iterator<DocumentNumber> = postings.iterator()
 }

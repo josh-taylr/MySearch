@@ -1,8 +1,9 @@
+import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
-import java.io.RandomAccessFile
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     if (args.contains("--grammar")) {
@@ -20,18 +21,25 @@ fun main(args: Array<String>) {
             Parse(InvertFileIndex({ result: Dictionary ->
                 dictionary = result
                 VirtualPostingsWriter().write(result, stream)
-            }), documentCount = Int.MAX_VALUE).parse(File("/Users/Josh/Documents/wsj.xml"))
+            })).parse(File("/Users/Josh/Documents/wsj.xml"))
         }
     }
 
-    val accessFile = RandomAccessFile(dictionaryFile, "r")
-    if (null == dictionary) {
-        dictionary = VirtualPostingsReader(accessFile).read()
-    }
+    val postingsFileReader = PostingsFileReader(dictionaryFile)
 
-    dictionary!!.search(*args.filterNot { it.contains('-') }.toTypedArray()).forEach { println(it) }
+    measureTimeMillis {
+        dictionaryFile.inputStream().buffered().use { stream: BufferedInputStream ->
+            if (null == dictionary) {
+                dictionary = VirtualPostingsReader(postingsFileReader).read(stream)
+            }
+        }
+    }.let { println("Dictionary loaded in $it milliseconds.") }
 
-    accessFile.close()
+    measureTimeMillis {
+        dictionary!!.search(*args.filterNot { it.contains('-') }.toTypedArray()).forEach { println(it) }
+    }.let { println("Search complete in $it milliseconds.") }
+
+    postingsFileReader.close()
 }
 
 private class GrammarIndex : Index {
