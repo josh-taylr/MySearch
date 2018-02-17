@@ -21,3 +21,10 @@ open class Dictionary(private val map: TreeMap<String, out Postings> = TreeMap()
         return map.entries.map { Pair(it.key, it.value) }.iterator()
     }
 }
+
+fun Dictionary.postingsCount() = sumBy { (_, postings) -> postings.count() }
+
+/**
+ * The sum of term lengths in this dictionary.
+ */
+fun Dictionary.termsSize() = sumBy { (term, _) -> term.length }
