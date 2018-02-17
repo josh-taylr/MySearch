@@ -25,7 +25,7 @@ class DictionaryStreamReader : DictionaryReader {
                 map[term] = postings
             }
         }
-        return Dictionary(map)
+        return MapDictionary(map)
     }
 
     companion object {

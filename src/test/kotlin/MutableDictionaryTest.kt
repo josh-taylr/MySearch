@@ -10,7 +10,7 @@ class MutableDictionaryTest {
     @Test
     fun `same dictionary should be equal`() {
         //given
-        val dictionary = MutableDictionary().add(DocumentNumber.parse(documentNumber), term1)
+        val dictionary = MutableMapDictionary().add(DocumentNumber.parse(documentNumber), term1)
         //when
         val result = dictionary == dictionary
         //then
@@ -20,8 +20,8 @@ class MutableDictionaryTest {
     @Test
     fun `matching dictionaries should be equal`() {
         //given
-        val dictionary1 = MutableDictionary().add(DocumentNumber.parse(documentNumber), term1)
-        val dictionary2 = MutableDictionary().add(DocumentNumber.parse(documentNumber), term1)
+        val dictionary1 = MutableMapDictionary().add(DocumentNumber.parse(documentNumber), term1)
+        val dictionary2 = MutableMapDictionary().add(DocumentNumber.parse(documentNumber), term1)
         //when
         val result = dictionary1 == dictionary2
         //then
@@ -31,8 +31,8 @@ class MutableDictionaryTest {
     @Test
     fun `different dictionaries shouldn't be equal`() {
         //given
-        val dictionary1 = MutableDictionary().add(DocumentNumber.parse(documentNumber), term1)
-        val dictionary2 = MutableDictionary().add(DocumentNumber.parse(documentNumber), term2)
+        val dictionary1 = MutableMapDictionary().add(DocumentNumber.parse(documentNumber), term1)
+        val dictionary2 = MutableMapDictionary().add(DocumentNumber.parse(documentNumber), term2)
         //when
         val result = dictionary1 == dictionary2
         //then

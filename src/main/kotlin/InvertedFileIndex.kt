@@ -7,7 +7,7 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
 
     private val tags = Stack<String>()
 
-    private var dictionary = MutableDictionary()
+    private var dictionary = MutableMapDictionary()
     private var documentNumber: DocumentNumber? = null
 
     override fun beginIndexing() {
@@ -16,7 +16,7 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
 
     override fun endIndexing() {
         indexWriter(dictionary)
-        dictionary = MutableDictionary()
+        dictionary = MutableMapDictionary()
     }
 
     override fun startTag(tag: String) {

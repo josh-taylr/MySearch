@@ -15,7 +15,7 @@ open class VirtualPostingsWriterTest {
     @Mock
     lateinit var reader: PostingsFileReader
 
-    private val dictionary = MutableDictionary()
+    private val dictionary = MutableMapDictionary()
             .add(DocumentNumber.parse("WSJ920102-0154"), "index")
             .add(DocumentNumber.parse("WSJ920102-0154"), "search")
             .add(DocumentNumber.parse("WSJ920102-0155"), "search")

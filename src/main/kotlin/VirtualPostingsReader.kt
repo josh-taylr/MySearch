@@ -20,7 +20,7 @@ class VirtualPostingsReader(private val reader: PostingsFileReader) : Dictionary
                 map[term] = VirtualPostings(reader, postingsLocation, postingsCount)
             }
         }
-        return Dictionary(map)
+        return MapDictionary(map)
     }
 
     companion object {
