@@ -1,4 +1,3 @@
-import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
 import java.util.*
@@ -12,34 +11,31 @@ fun main(args: Array<String>) {
     }
 
     val dictionaryFile = File("out/index/dictionary.dat")
-    var dictionary: Dictionary? = null
 
     if (args.contains("--build") || !dictionaryFile.exists()) {
         dictionaryFile.delete()
         dictionaryFile.outputStream().buffered().use { stream: BufferedOutputStream ->
             println("Build index...")
             Parse(InvertFileIndex({ result: Dictionary ->
-                dictionary = result
-                VirtualPostingsWriter().write(result, stream)
+                DictionaryFileWriter().write(result, stream)
             })).parse(File("/Users/Josh/Documents/wsj.xml"))
         }
     }
 
-    val postingsFileReader = PostingsFileReader(dictionaryFile)
+    val dictionary : ISAMSDictionaryFile = run {
+        var value: ISAMSDictionaryFile? = null
+        measureTimeMillis {
+            value = ISAMSDictionaryFile(dictionaryFile, DictionaryFileReader())
+        }.let { println("Index read in $it milliseconds.") }
+        return@run value!!
+    }
 
     measureTimeMillis {
-        dictionaryFile.inputStream().buffered().use { stream: BufferedInputStream ->
-            if (null == dictionary) {
-                dictionary = VirtualPostingsReader(postingsFileReader).read(stream)
-            }
-        }
-    }.let { println("Dictionary loaded in $it milliseconds.") }
-
-    measureTimeMillis {
-        dictionary!!.search(*args.filterNot { it.contains('-') }.toTypedArray()).forEach { println(it) }
+        args.filterNot { it.contains('-') }
+                .mapNotNull { dictionary[it] }
+                .reduce {acc, postings -> acc.intersect(postings) }
+                .forEach(::println)
     }.let { println("Search complete in $it milliseconds.") }
-
-    postingsFileReader.close()
 }
 
 private class GrammarIndex : Index {

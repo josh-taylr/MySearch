@@ -4,7 +4,7 @@ import java.util.*
 
 class DictionaryFileReader {
 
-    fun readDictionary(file: File): Map<String, DictionaryBlock> {
+    fun readDictionary(file: File): NavigableMap<String, DictionaryBlock> {
         val map = mutableMapOf<String, DictionaryBlock>()
         RandomAccessFile(file, "r").run {
             seek(0) // reset
@@ -53,7 +53,3 @@ class DictionaryFileReader {
 
     private fun <K, V> mutableMapOf() = TreeMap<K, V>()
 }
-
-data class DictionaryBlock(val position: Long, val size: Long)
-
-data class PostingsBlock(val position: Long, val size: Long)
