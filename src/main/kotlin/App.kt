@@ -6,11 +6,11 @@ import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     if (args.contains("--grammar")) {
-        Parse(GrammarIndex()).parse(File("/Users/Josh/Documents/wsj.xml"))
+        Parse(GrammarIndex()).parse(File(WSJ_FILE))
         return
     }
 
-    val dictionaryFile = File("out/index/dictionary.dat")
+    val dictionaryFile = File(INDEX_DIR + "/dictionary.dat")
 
     if (args.contains("--build") || !dictionaryFile.exists()) {
         dictionaryFile.delete()
@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
             println("Build index...")
             Parse(InvertFileIndex({ result: Dictionary ->
                 DictionaryFileWriter().write(result, stream)
-            })).parse(File("/Users/Josh/Documents/wsj.xml"))
+            })).parse(File(WSJ_FILE))
         }
     }
 
