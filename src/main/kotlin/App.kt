@@ -9,6 +9,7 @@ fun main(args: Array<String>) {
 
     if (args.contains("--build") || !dictionaryFile.exists()) {
         dictionaryFile.delete()
+        File(INDEX_DIR).mkdirs()
         dictionaryFile.outputStream().buffered().use { stream: BufferedOutputStream ->
             println("Build index...")
             Parse(InvertFileIndex({ result: Dictionary ->
