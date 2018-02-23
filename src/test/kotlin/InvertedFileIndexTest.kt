@@ -33,7 +33,7 @@ class InvertedFileIndexTest {
         //when
         index.endIndexing()
         //then
-        verify(indexWriter).invoke(MapDictionary())
+        verify(indexWriter).invoke(emptyDictionary())
     }
 
     @Test
@@ -43,7 +43,7 @@ class InvertedFileIndexTest {
         //when
         index.endIndexing()
         //then
-        verify(indexWriter).invoke(MapDictionary())
+        verify(indexWriter).invoke(emptyDictionary())
     }
 
     @Test
@@ -54,8 +54,7 @@ class InvertedFileIndexTest {
         //when
         index.endIndexing()
         //then
-        val expected = MutableMapDictionary().add(DocumentNumber.parse(DOCUMENT_NUMBER), term = TERM)
-        verify(indexWriter).invoke(expected)
+        verify(indexWriter).invoke(dictionaryOf(TERM to postingsOf(DOCUMENT_NUMBER)))
     }
 
     @Test
@@ -67,8 +66,7 @@ class InvertedFileIndexTest {
         //when
         index.endIndexing()
         //then
-        val expected = MutableMapDictionary().add(DocumentNumber.parse(DOCUMENT_NUMBER), term = TERM)
-        verify(indexWriter).invoke(expected)
+        verify(indexWriter).invoke(dictionaryOf(TERM to postingsOf(DOCUMENT_NUMBER)))
     }
 
     @Test
@@ -78,7 +76,7 @@ class InvertedFileIndexTest {
         indexTerm("Hello")
         //when
         index.endIndexing()
-        verify(indexWriter).invoke(MutableMapDictionary().add(DocumentNumber.parse(DOCUMENT_NUMBER), term = "hello"))
+        verify(indexWriter).invoke(dictionaryOf("hello" to postingsOf(DOCUMENT_NUMBER)))
     }
 
     @Test
@@ -94,8 +92,8 @@ class InvertedFileIndexTest {
         indexTerm("hello")
         index.endIndexing()
         //then
-        inOrder.verify(indexWriter).invoke(MutableMapDictionary().add(DocumentNumber.parse(DOCUMENT_NUMBER), term = TERM))
-        inOrder.verify(indexWriter).invoke(MutableMapDictionary().add(DocumentNumber.parse(DOCUMENT_NUMBER), term = "hello"))
+        inOrder.verify(indexWriter).invoke(dictionaryOf(TERM to postingsOf(DOCUMENT_NUMBER)))
+        inOrder.verify(indexWriter).invoke(dictionaryOf("hello" to postingsOf(DOCUMENT_NUMBER)))
     }
 
     private fun indexDocumentNumber(documentNumber: String) {

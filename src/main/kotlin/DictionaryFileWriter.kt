@@ -1,11 +1,11 @@
 import java.io.DataOutputStream
 import java.io.OutputStream
 
-class DictionaryFileWriter(private val blockSize: Int = 1000) : DictionaryWriter {
+class DictionaryFileWriter(private val blockSize: Int = 1000) {
 
     private val termInfoSize = (BYTE_SIZE + LONG_SIZE + LONG_SIZE) / BYTE_SIZE
 
-    override fun write(dictionary: Dictionary, stream: OutputStream) {
+    fun write(dictionary: Dictionary, stream: OutputStream) {
         DataOutputStream(stream).run {
             val postingsSize = dictionary.postingsCount() * (LONG_SIZE / BYTE_SIZE)
             val termsSize = dictionary.termsSize() + dictionary.count() * termInfoSize
@@ -21,7 +21,8 @@ class DictionaryFileWriter(private val blockSize: Int = 1000) : DictionaryWriter
             var nodeLocation = 8L + postingsSize
             var nodeSize = 0L
             var nodeTerm: String? = null
-            dictionary.forEachIndexed { index, (term, postings) ->
+            var count = 0
+            dictionary.forEach { term, postings ->
                 if (nodeTerm == null) {
                     nodeTerm = term
                 }
@@ -35,7 +36,7 @@ class DictionaryFileWriter(private val blockSize: Int = 1000) : DictionaryWriter
                 postingLoc += postingSize
                 nodeSize += (term.length + termInfoSize).toLong()
                 // build node index
-                if ((index + 1) % blockSize == 0) {
+                if (++count % blockSize == 0) {
                     nodeData.add(TermData(nodeTerm!!, nodeLocation, nodeSize))
                     nodeLocation += nodeSize
                     nodeSize = 0L

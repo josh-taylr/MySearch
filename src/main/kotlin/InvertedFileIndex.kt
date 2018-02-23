@@ -7,7 +7,7 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
 
     private val tags = Stack<String>()
 
-    private var dictionary = MutableMapDictionary()
+    private var dictionary = mutableDictionaryOf()
     private var documentNumber: DocumentNumber? = null
 
     override fun beginIndexing() {
@@ -16,7 +16,7 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
 
     override fun endIndexing() {
         indexWriter(dictionary)
-        dictionary = MutableMapDictionary()
+        dictionary = mutableDictionaryOf()
     }
 
     override fun startTag(tag: String) {
@@ -33,7 +33,7 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
         } else if ("TEXT" == tags.peek()) {
             cleanTerm(term)?.let { clean: String ->
                 if (null == documentNumber) throw IllegalStateException("Adding te rm from unknown document")
-                dictionary.add(documentNumber!!, term = clean)
+                dictionary.getOrPut(clean, { mutablePostingsOf() }).add(documentNumber!!)
             }
         }
     }

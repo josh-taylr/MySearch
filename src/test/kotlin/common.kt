@@ -1,14 +1,13 @@
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 
-val testDictionary = MutableMapDictionary()
-        .add(DocumentNumber.parse("WSJ920102-0154"), "index")
-        .add(DocumentNumber.parse("WSJ920102-0154"), "search")
-        .add(DocumentNumber.parse("WSJ920102-0155"), "search")
-        .add(DocumentNumber.parse("WSJ920102-0155"), "engine")
-        .add(DocumentNumber.parse("WSJ920102-0154"), "postings")
-        .add(DocumentNumber.parse("WSJ920102-0154"), "term")
-        .add(DocumentNumber.parse("WSJ920102-0155"), "index")
+val testDictionary = dictionaryOf(
+        "engine" to postingsOf("WSJ920102-0155"),
+        "index" to postingsOf("WSJ920102-0154", "WSJ920102-0155"),
+        "postings" to postingsOf("WSJ920102-0154"),
+        "search" to postingsOf("WSJ920102-0154", "WSJ920102-0155"),
+        "term" to postingsOf("WSJ920102-0154")
+)
 
 val testDictionaryBytes: ByteArray = ByteArrayOutputStream().also {
     DataOutputStream(it).run {

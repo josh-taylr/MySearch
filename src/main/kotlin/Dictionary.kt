@@ -1,80 +1,27 @@
 import java.util.*
 
-typealias DictionaryEntry = Pair<String, Postings>
+typealias Dictionary = Map<String, PostingsType>
 
-interface Dictionary : Iterable<DictionaryEntry> {
+typealias MutableDictionary = MutableMap<String, MutablePostingsType>
 
-    fun search(vararg term: String): List<DocumentNumber>
+fun emptyDictionary(): Dictionary = emptyMap()
+
+fun dictionaryOf(vararg entries: Pair<String, PostingsType>): Dictionary = TreeMap<String, PostingsType>().apply {
+    putAll(entries)
 }
 
-abstract class AbstractDictionary : Dictionary {
+fun mutableDictionaryOf(): MutableDictionary = TreeMap()
 
-    abstract fun entries(): Set<DictionaryEntry>
+typealias PostingsType = Set<DocumentNumber>
 
-    override fun equals(other: Any?): Boolean {
-        return when (other) {
-            is AbstractDictionary -> entries() == other.entries()
-            else -> false
-        }
-    }
+typealias MutablePostingsType = MutableSet<DocumentNumber>
 
-    override fun hashCode(): Int {
-        return entries().hashCode()
-    }
-
-    override fun toString(): String {
-        return entries().toString()
-    }
+fun postingsOf(vararg documentNumber: String): PostingsType = mutableSetOf<DocumentNumber>().apply {
+    addAll(documentNumber.map { DocumentNumber.parse(it) })
 }
 
-open class MapDictionary(private val map: TreeMap<String, out Postings> = TreeMap()) : AbstractDictionary() {
+fun mutablePostingsOf(): MutablePostingsType = mutableSetOf()
 
-    override fun search(vararg term: String): List<DocumentNumber> {
-        return term.mapNotNull { map[it] }
-                .reduce {acc, postings -> acc.and(postings)}
-                .toList()
-    }
+fun Dictionary.postingsCount() = entries.sumBy { (_, postings) -> postings.count() }
 
-    override fun entries(): Set<DictionaryEntry> {
-        return map.entries
-                .map { (term, p) -> DictionaryEntry(term, p) }
-                .toSet()
-    }
-
-    override fun iterator(): Iterator<DictionaryEntry> {
-        return IteratorDecorator(map)
-    }
-
-    private class IteratorDecorator(map: TreeMap<String, out Postings>) : Iterator<DictionaryEntry> {
-
-        val iterator = map.iterator()
-
-        override fun hasNext(): Boolean {
-            return iterator.hasNext()
-        }
-
-        override fun next(): DictionaryEntry {
-            val (term, postings) = iterator.next()
-            return DictionaryEntry(term, postings)
-        }
-    }
-}
-
-/*
-    An inverted file index containing a list of terms with with corresponding postings.
- */
-class MutableMapDictionary(private val map: TreeMap<String, InMemoryPostings> = TreeMap()) : MapDictionary(map) {
-
-    fun add(documentNumber: DocumentNumber, term: String): MutableMapDictionary {
-        val postings = map.getOrPut(term) { InMemoryPostings() }
-        postings.add(documentNumber)
-        return this
-    }
-}
-
-fun Dictionary.postingsCount() = sumBy { (_, postings) -> postings.count() }
-
-/**
- * The sum of term lengths in this dictionary.
- */
-fun Dictionary.termsSize() = sumBy { (term, _) -> term.length }
+fun Dictionary.termsSize() = entries.sumBy { (term, _) -> term.length }
