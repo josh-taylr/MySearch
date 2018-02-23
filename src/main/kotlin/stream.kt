@@ -1,6 +1,6 @@
 import java.io.DataOutputStream
 
-fun DataOutputStream.writePostings(postings: PostingsType) {
+fun DataOutputStream.writePostings(postings: Postings) {
     postings.forEach {
         writeLong(it.value)
     }

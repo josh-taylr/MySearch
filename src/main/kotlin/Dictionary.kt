@@ -1,22 +1,22 @@
 import java.util.*
 
-typealias Dictionary = Map<String, PostingsType>
+typealias Dictionary = Map<String, Postings>
 
 typealias MutableDictionary = MutableMap<String, MutablePostingsType>
 
 fun emptyDictionary(): Dictionary = emptyMap()
 
-fun dictionaryOf(vararg entries: Pair<String, PostingsType>): Dictionary = TreeMap<String, PostingsType>().apply {
+fun dictionaryOf(vararg entries: Pair<String, Postings>): Dictionary = TreeMap<String, Postings>().apply {
     putAll(entries)
 }
 
 fun mutableDictionaryOf(): MutableDictionary = TreeMap()
 
-typealias PostingsType = Set<DocumentNumber>
+typealias Postings = Set<DocumentNumber>
 
 typealias MutablePostingsType = MutableSet<DocumentNumber>
 
-fun postingsOf(vararg documentNumber: String): PostingsType = mutableSetOf<DocumentNumber>().apply {
+fun postingsOf(vararg documentNumber: String): Postings = mutableSetOf<DocumentNumber>().apply {
     addAll(documentNumber.map { DocumentNumber.parse(it) })
 }
 

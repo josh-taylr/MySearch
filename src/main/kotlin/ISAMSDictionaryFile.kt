@@ -5,7 +5,7 @@ import kotlin.collections.AbstractMap
 /**
  *
  */
-class ISAMSDictionaryFile(private val file: File, private val fileReader: DictionaryFileReader) : AbstractMap<String, PostingsType>() {
+class ISAMSDictionaryFile(private val file: File, private val fileReader: DictionaryFileReader) : AbstractMap<String, Postings>() {
 
     private val map: NavigableMap<String, DictionaryBlock> by lazy {
         fileReader.readDictionary(file)
@@ -23,7 +23,7 @@ class ISAMSDictionaryFile(private val file: File, private val fileReader: Dictio
                 .toSet()
     }
 
-    override fun get(key: String): PostingsType? {
+    override fun get(key: String): Postings? {
         return map.floorEntry(key).value
                 .let { loadBlock(it) }[key]
                 .let { loadBlock(it!!) }
@@ -43,5 +43,5 @@ class ISAMSDictionaryFile(private val file: File, private val fileReader: Dictio
         return map.toString()
     }
 
-    data class Entry(override val key: String, override val value: PostingsType) : Map.Entry<String, PostingsType>
+    data class Entry(override val key: String, override val value: Postings) : Map.Entry<String, Postings>
 }
