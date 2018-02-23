@@ -5,6 +5,7 @@ import kotlin.system.measureTimeMillis
 fun main(args: Array<String>) {
 
     val dictionaryFile = File(INDEX_DIR + "/dictionary.dat")
+    val wsjCollection = File(WSJ_FILE)
 
     if (args.contains("--build") || !dictionaryFile.exists()) {
         dictionaryFile.delete()
@@ -12,7 +13,7 @@ fun main(args: Array<String>) {
             println("Build index...")
             Parse(InvertFileIndex({ result: Dictionary ->
                 DictionaryFileWriter().write(result, stream)
-            })).parse(File(WSJ_FILE))
+            })).parse(wsjCollection)
         }
     }
 
