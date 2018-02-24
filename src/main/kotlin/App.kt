@@ -1,4 +1,3 @@
-import java.io.BufferedOutputStream
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -10,12 +9,10 @@ fun main(args: Array<String>) {
     if (args.contains("--build") || !dictionaryFile.exists()) {
         dictionaryFile.delete()
         File(INDEX_DIR).mkdirs()
-        dictionaryFile.outputStream().buffered().use { stream: BufferedOutputStream ->
-            println("Build index...")
-            Parse(InvertFileIndex({ result: Dictionary ->
-                DictionaryFileWriter().write(result, stream)
-            })).parse(wsjCollection)
-        }
+        println("Build index...")
+        Parse(InvertFileIndex({ result: Dictionary ->
+            DictionaryFileWriter().write(result, dictionaryFile)
+        })).parse(wsjCollection)
     }
 
     val dictionary : ISAMSDictionaryFile = run {
