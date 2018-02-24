@@ -1,10 +1,15 @@
 import java.io.DataInput
 import java.io.DataOutput
 
-fun DataOutput.writePostings(postings: Postings) {
+/**
+ * Writes the given postings to this byte stream and returns the number of bytes written.
+ */
+fun DataOutput.writePostings(postings: Postings): Long {
+    var written = 0L
     postings.forEach {
-        writeLong(it.value)
+        writeLong(it.value); written += 8
     }
+    return written
 }
 
 fun DataInput.readPostings(size: Long): Postings = mutablePostingsOf().apply {
