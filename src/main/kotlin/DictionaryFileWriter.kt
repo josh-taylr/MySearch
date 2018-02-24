@@ -1,12 +1,12 @@
+import java.io.DataOutputStream
 import java.io.File
-import java.io.RandomAccessFile
 
 class DictionaryFileWriter(private val blockSize: Int = 1000) {
 
     private val termInfoSize = (BYTE_SIZE + LONG_SIZE + LONG_SIZE) / BYTE_SIZE
 
     fun write(dictionary: Dictionary, file: File) {
-        RandomAccessFile(file, "rw").run {
+        DataOutputStream(file.outputStream()).run {
             val postingsSize = dictionary.postingsCount() * (LONG_SIZE / BYTE_SIZE)
             val termsSize = dictionary.termsSize() + dictionary.count() * termInfoSize
             // write terms index = sum of postings count multiplied size of long + sum of terms lengths with a byte, int, and, long
