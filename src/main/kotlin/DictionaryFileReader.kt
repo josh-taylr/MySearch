@@ -29,8 +29,7 @@ class DictionaryFileReader {
         RandomAccessFile(file, "r").run {
             seek(block.position)
             while (filePointer < (block.position + block.size)) {
-                val termLength = read()
-                val term = ByteArray(termLength).also(::readFully).let { String(it) }
+                val term = readTerm()
                 val position = readLong()
                 val size = readLong()
                 map[term] = PostingsBlock(position, size)
@@ -39,16 +38,11 @@ class DictionaryFileReader {
         return map
     }
 
-    fun readPostings(file: File, block: PostingsBlock): Set<DocumentNumber> {
-        val set = mutableSetOf<DocumentNumber>()
-        RandomAccessFile(file, "r").run {
+    fun readPostings(file: File, block: PostingsBlock): Postings {
+        return RandomAccessFile(file, "r").run {
             seek(block.position)
-            while (filePointer < (block.position + block.size)) {
-                val value = readLong()
-                set.add(DocumentNumber(value))
-            }
+            readPostings(block.size)
         }
-        return set
     }
 
     private fun <K, V> mutableMapOf() = TreeMap<K, V>()

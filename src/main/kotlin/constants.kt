@@ -1,5 +1,5 @@
-const val WSJ_FILE: String = ""
-const val INDEX_DIR: String = ""
+const val WSJ_FILE: String = "/Users/Josh/Documents/wsj.xml"
+const val INDEX_DIR: String = "/Users/Josh/.my_search"
 
 const val BYTE_SIZE = 8
 const val INT_SIZE  = 32
