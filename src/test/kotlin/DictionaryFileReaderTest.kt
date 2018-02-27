@@ -52,7 +52,7 @@ class DictionaryFileReaderTest {
         //when
         val result = reader.readPostings(file, PostingsBlock(40, 16))
         //then
-        val expected = setOf(DocumentNumber(9201020154), DocumentNumber(9201020155))
+        val expected = postingsOf("WSJ920102-0154", "WSJ920102-0155")
         assertEquals(expected, result)
     }
 }

@@ -28,11 +28,11 @@ class ISAMSDictionaryFileTest {
         val entries = dictionary.entries
         //then
         val expected = setOf(
-                ISAMSDictionaryFile.Entry("engine", setOf(DocumentNumber(9201020155))),
-                ISAMSDictionaryFile.Entry("index", setOf(DocumentNumber(9201020154), DocumentNumber(9201020155))),
-                ISAMSDictionaryFile.Entry("postings", setOf(DocumentNumber(9201020154))),
-                ISAMSDictionaryFile.Entry("search", setOf(DocumentNumber(9201020154), DocumentNumber(9201020155))),
-                ISAMSDictionaryFile.Entry("term", setOf(DocumentNumber(9201020154)))
+                ISAMSDictionaryFile.Entry("engine", postingsOf("WSJ920102-0155")),
+                ISAMSDictionaryFile.Entry("index", postingsOf("WSJ920102-0154", "WSJ920102-0155")),
+                ISAMSDictionaryFile.Entry("postings", postingsOf("WSJ920102-0154")),
+                ISAMSDictionaryFile.Entry("search", postingsOf("WSJ920102-0154", "WSJ920102-0155")),
+                ISAMSDictionaryFile.Entry("term", postingsOf("WSJ920102-0154"))
         )
         assertEquals(expected, entries)
     }
@@ -42,6 +42,6 @@ class ISAMSDictionaryFileTest {
         //when
         val postings = dictionary["search"]
         //then
-        assertEquals(setOf(DocumentNumber(9201020154), DocumentNumber(9201020155)), postings)
+        assertEquals(postingsOf("WSJ920102-0154", "WSJ920102-0155"), postings)
     }
 }
