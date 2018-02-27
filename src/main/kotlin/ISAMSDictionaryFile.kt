@@ -30,13 +30,11 @@ class ISAMSDictionaryFile(private val file: File, private val fileReader: Dictio
     }
 
     private fun loadBlock(block: DictionaryBlock): Map<String, PostingsBlock> {
-        val res = fileReader.readDictionary(file, block)
-        return res
+        return fileReader.readDictionary(file, block)
     }
 
-    private fun loadBlock(block: PostingsBlock): Set<DocumentNumber> {
-        val res = fileReader.readPostings(file, block)
-        return res
+    private fun loadBlock(block: PostingsBlock): Postings {
+        return fileReader.readPostings(file, block)
     }
 
     override fun toString(): String {
