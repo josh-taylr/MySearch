@@ -1,4 +1,4 @@
-class CountSet<T> : AbstractMutableSet<T>() {
+class CountSet<T> : AbstractMutableSet<Pair<T, Int>>() {
 
     private val map = mutableMapOf<T, Int>()
 
@@ -7,7 +7,15 @@ class CountSet<T> : AbstractMutableSet<T>() {
 
     fun count(element: T): Int = map.getOrDefault(element, 0)
 
-    override fun add(element: T): Boolean = null == map.put(element, count(element) + 1)
+    fun addElement(element: T): Boolean = null == map.put(element, count(element) + 1)
 
-    override fun iterator(): MutableIterator<T> = map.keys.iterator()
+    override fun add(element: Pair<T, Int>): Boolean {
+        val (e, count) = element
+        return null == map.put(e, count)
+    }
+
+    override fun iterator(): MutableIterator<Pair<T, Int>> = map.entries
+            .map { (e, count) -> e to count }
+            .toMutableList()
+            .iterator()
 }

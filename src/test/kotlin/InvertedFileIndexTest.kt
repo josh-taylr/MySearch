@@ -66,7 +66,7 @@ class InvertedFileIndexTest {
         //when
         index.endIndexing()
         //then
-        verify(indexWriter).invoke(dictionaryOf(TERM to postingsOf(DOCUMENT_NUMBER)))
+        verify(indexWriter).invoke(dictionaryOf(TERM to postingsOf(DOCUMENT_NUMBER to 2)))
     }
 
     @Test

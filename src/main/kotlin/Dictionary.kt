@@ -12,12 +12,16 @@ fun dictionaryOf(vararg entries: Pair<String, Postings>): Dictionary = TreeMap<S
 
 fun mutableDictionaryOf(): MutableDictionary = TreeMap()
 
-typealias Postings = Set<DocumentNumber>
+typealias Postings = Set<Pair<DocumentNumber, Int>>
 
-typealias MutablePostings = MutableSet<DocumentNumber>
+typealias MutablePostings = CountSet<DocumentNumber>
 
-fun postingsOf(vararg documentNumber: String): Postings = mutableSetOf<DocumentNumber>().apply {
-    addAll(documentNumber.map { DocumentNumber.parse(it) })
+fun postingsOf(vararg documentNumber: String): Postings = mutableSetOf<Pair<DocumentNumber, Int>>().apply {
+    addAll(documentNumber.map { DocumentNumber.parse(it) to 1 })
+}
+
+fun postingsOf(vararg documentNumber: Pair<String, Int>): Postings = mutableSetOf<Pair<DocumentNumber, Int>>().apply {
+    addAll(documentNumber.map { DocumentNumber.parse(it.first) to it.second })
 }
 
 fun mutablePostingsOf(): MutablePostings = CountSet()

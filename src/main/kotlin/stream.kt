@@ -7,7 +7,7 @@ import java.io.DataOutput
 fun DataOutput.writePostings(postings: Postings): Long {
     var written = 0L
     postings.forEach {
-        writeLong(it.value); written += 8
+        writeLong(it.first.value); written += 8
     }
     return written
 }
@@ -16,7 +16,7 @@ fun DataInput.readPostings(size: Long): Postings = mutablePostingsOf().apply {
     var read = 0L
     while (read < size) {
         val value = readLong(); read += 8
-        add(DocumentNumber(value))
+        add(DocumentNumber(value) to 1)
     }
 }
 

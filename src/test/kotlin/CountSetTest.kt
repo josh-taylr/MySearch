@@ -12,10 +12,10 @@ class CountSetTest {
     fun setUp() {
         set = CountSet()
 
-        set.add(e2)
-        set.add(e3)
-        set.add(e3)
-        set.add(e3)
+        set.addElement(e2)
+        set.addElement(e3)
+        set.addElement(e3)
+        set.addElement(e3)
     }
 
     @Test
@@ -40,12 +40,12 @@ class CountSetTest {
 
     @Test
     fun addAbsentReturnTrue() {
-        assertTrue(set.add(e1))
+        assertTrue(set.addElement(e1))
     }
 
     @Test
     fun addPresentReturnFalse() {
-        assertFalse(set.add(e2))
+        assertFalse(set.addElement(e2))
     }
 
     companion object {
