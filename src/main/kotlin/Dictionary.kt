@@ -20,7 +20,7 @@ fun postingsOf(vararg documentNumber: String): Postings = mutableSetOf<DocumentN
     addAll(documentNumber.map { DocumentNumber.parse(it) })
 }
 
-fun mutablePostingsOf(): MutablePostings = mutableSetOf()
+fun mutablePostingsOf(): MutablePostings = CountSet()
 
 fun Dictionary.postingsCount() = entries.sumBy { (_, postings) -> postings.count() }
 
