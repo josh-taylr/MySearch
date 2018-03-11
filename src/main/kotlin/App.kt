@@ -23,6 +23,12 @@ fun main(args: Array<String>) {
         return@run value!!
     }
 
+    val documentLengths = mutableMapOf<Long, Int>().apply {
+        dictionary["@length"]!!.forEach {
+            put(it.documentNumber.value, it.termFrequency)
+        }
+    }
+
     measureTimeMillis {
         args.filterNot { it.contains('-') }
                 .mapNotNull { dictionary[it] }
