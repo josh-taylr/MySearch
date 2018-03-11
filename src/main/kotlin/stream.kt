@@ -7,17 +7,29 @@ import java.io.DataOutput
 fun DataOutput.writePostings(postings: Postings): Long {
     var written = 0L
     postings.forEach {
-        writeLong(it.first.value); written += 8
+        written += writePosting(it)
     }
     return written
 }
 
-fun DataInput.readPostings(size: Long): Postings = mutablePostingsOf().apply {
-    var read = 0L
-    while (read < size) {
-        val value = readLong(); read += 8
-        add(DocumentNumber(value) to 1)
+fun DataOutput.writePosting(posting: Posting): Int = posting.let { (dn, tf)->
+    writeLong(dn.value)
+    writeInt(tf)
+    return 12
+}
+
+fun DataInput.readPostings(size: Long): Postings {
+    val postings = mutablePostingsOf()
+    for (i in 0 until size / 12) {
+        postings.add(readPosting())
     }
+    return postings
+}
+
+fun DataInput.readPosting(): Posting {
+    val dn = readLong()
+    val tf = readInt()
+    return Posting(DocumentNumber(dn), tf)
 }
 
 fun DataOutput.writeTerm(term: String) {
