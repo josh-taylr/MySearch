@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
     measureTimeMillis {
         args.filterNot { it.contains('-') }
                 .mapNotNull { dictionary[it] }
-                .reduce {acc, postings -> acc.intersect(postings) }
+                .reduce {acc, postings -> acc intersect postings }
                 .forEach(::println)
     }.let { println("Search complete in $it milliseconds.") }
 }

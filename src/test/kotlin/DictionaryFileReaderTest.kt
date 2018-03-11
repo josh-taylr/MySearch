@@ -23,26 +23,26 @@ class DictionaryFileReaderTest {
     }
 
     @Test
-    fun readDictionaryBlock() {
+    fun readDictionary() {
         //when
         val result = reader.readDictionary(file)
         //then
         val expected = TreeMap<String, DictionaryBlock>().apply {
-            put("engine",DictionaryBlock(64L, 45L))
-            put("postings", DictionaryBlock(109L, 48L))
-            put("term", DictionaryBlock(157L, 21L))
+            put("engine",DictionaryBlock(92L, 45L))
+            put("postings", DictionaryBlock(137L, 48L))
+            put("term", DictionaryBlock(185L, 21L))
         }
         assertEquals(expected, result)
     }
 
     @Test
-    fun readDictionary() {
+    fun readDictionaryBlock() {
         //when
-        val result = reader.readDictionary(file, DictionaryBlock(109L, 48L))
+        val result = reader.readDictionary(file, DictionaryBlock(137L, 48L))
         //then
         val expected = TreeMap<String, PostingsBlock>().apply {
-            put("postings", PostingsBlock(32L, 8L))
-            put("search", PostingsBlock(40L, 16L))
+            put("postings", PostingsBlock(44L, 12L))
+            put("search", PostingsBlock(56L, 24L))
         }
         assertEquals(expected, result)
     }
@@ -50,7 +50,7 @@ class DictionaryFileReaderTest {
     @Test
     fun readPostings() {
         //when
-        val result = reader.readPostings(file, PostingsBlock(40, 16))
+        val result = reader.readPostings(file, PostingsBlock(56, 24))
         //then
         val expected = postingsOf("WSJ920102-0154", "WSJ920102-0155")
         assertEquals(expected, result)

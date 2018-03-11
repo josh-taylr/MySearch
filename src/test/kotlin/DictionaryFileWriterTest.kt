@@ -1,4 +1,5 @@
 import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.File
 
@@ -11,6 +12,8 @@ class DictionaryFileWriterTest {
         //when
         DictionaryFileWriter(2).write(testDictionary, file)
         //then
-        assertArrayEquals(testDictionaryBytes, file.readBytes())
+        val readBytes = file.readBytes()
+        val testDictionaryBytes1 = testDictionaryBytes
+        assertArrayEquals(testDictionaryBytes1, readBytes)
     }
 }
