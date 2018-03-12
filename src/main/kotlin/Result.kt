@@ -1,0 +1,1 @@
+data class Result(val document: DocumentNumber, val weight: Double)

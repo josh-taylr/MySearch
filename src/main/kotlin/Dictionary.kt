@@ -35,6 +35,8 @@ class MutablePostings : Postings, AbstractMutableSet<Posting>() {
     fun count(documentNumber: DocumentNumber): Int = map.getOrDefault(documentNumber, 0)
 }
 
+fun emptyPostings() = emptySet<Posting>()
+
 fun postingsOf(vararg documentNumber: String): Postings = mutableSetOf<Posting>().apply {
     addAll(documentNumber.map { Posting(DocumentNumber.parse(it), 1) })
 }
