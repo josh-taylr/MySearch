@@ -11,14 +11,14 @@ fun main(args: Array<String>) {
         File(INDEX_DIR).mkdirs()
         println("Build index...")
         Parse(InvertFileIndex({ result: Dictionary ->
-            DictionaryFileWriter().write(result, dictionaryFile)
+            FileDictionaryWriter().write(result, dictionaryFile)
         })).parse(wsjCollection)
     }
 
-    val dictionary : ISAMSDictionaryFile = run {
-        var value: ISAMSDictionaryFile? = null
+    val dictionary : FileDictionary = run {
+        var value: FileDictionary? = null
         measureTimeMillis {
-            value = ISAMSDictionaryFile(dictionaryFile, DictionaryFileReader())
+            value = FileDictionary(dictionaryFile, FileDictionaryReader())
         }.let { println("Index read in $it milliseconds.") }
         return@run value!!
     }

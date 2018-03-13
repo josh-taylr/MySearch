@@ -2,7 +2,7 @@ import java.io.File
 import java.io.RandomAccessFile
 import java.util.*
 
-class DictionaryFileReader {
+class FileDictionaryReader {
 
     fun readDictionary(file: File): NavigableMap<String, DictionaryBlock> {
         val map = mutableMapOf<String, DictionaryBlock>()

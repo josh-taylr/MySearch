@@ -4,11 +4,11 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
-class ISAMSDictionaryFileTest {
+class FileDictionaryTest {
 
-    private val reader = DictionaryFileReader()
+    private val reader = FileDictionaryReader()
     private val file = File("/tmp/dictionary_file.dat")
-    private val dictionary = ISAMSDictionaryFile(file, reader)
+    private val dictionary = FileDictionary(file, reader)
 
     @BeforeTest
     fun setupClass() {
@@ -28,11 +28,11 @@ class ISAMSDictionaryFileTest {
         val entries = dictionary.entries
         //then
         val expected = setOf(
-                ISAMSDictionaryFile.Entry("engine", postingsOf("WSJ920102-0155")),
-                ISAMSDictionaryFile.Entry("index", postingsOf("WSJ920102-0154", "WSJ920102-0155")),
-                ISAMSDictionaryFile.Entry("postings", postingsOf("WSJ920102-0154")),
-                ISAMSDictionaryFile.Entry("search", postingsOf("WSJ920102-0154", "WSJ920102-0155")),
-                ISAMSDictionaryFile.Entry("term", postingsOf("WSJ920102-0154"))
+                FileDictionary.Entry("engine", postingsOf("WSJ920102-0155")),
+                FileDictionary.Entry("index", postingsOf("WSJ920102-0154", "WSJ920102-0155")),
+                FileDictionary.Entry("postings", postingsOf("WSJ920102-0154")),
+                FileDictionary.Entry("search", postingsOf("WSJ920102-0154", "WSJ920102-0155")),
+                FileDictionary.Entry("term", postingsOf("WSJ920102-0154"))
         )
         assertEquals(expected, entries)
     }

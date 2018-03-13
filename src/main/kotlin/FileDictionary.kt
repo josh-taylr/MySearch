@@ -5,7 +5,7 @@ import kotlin.collections.AbstractMap
 /**
  *
  */
-class ISAMSDictionaryFile(private val file: File, private val fileReader: DictionaryFileReader) : AbstractMap<String, Postings>() {
+class FileDictionary(private val file: File, private val fileReader: FileDictionaryReader) : AbstractMap<String, Postings>() {
 
     private val map: NavigableMap<String, DictionaryBlock> by lazy {
         fileReader.readDictionary(file)

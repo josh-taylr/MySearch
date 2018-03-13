@@ -5,9 +5,9 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
-class DictionaryFileReaderTest {
+class FileDictionaryReaderTest {
 
-    private val reader = DictionaryFileReader()
+    private val reader = FileDictionaryReader()
     private val file = File("/tmp/dictionary_file.dat")
 
     @BeforeTest
