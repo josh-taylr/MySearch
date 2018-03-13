@@ -1,3 +1,8 @@
+package index
+
+import dictionary.*
+import dictionary.Dictionary
+import util.cleanTerm
 import java.util.*
 
 /*

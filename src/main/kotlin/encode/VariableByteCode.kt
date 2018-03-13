@@ -1,3 +1,5 @@
+package encode
+
 import java.lang.Math.log
 import java.nio.ByteBuffer
 import java.util.*

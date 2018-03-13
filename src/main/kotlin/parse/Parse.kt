@@ -1,5 +1,9 @@
-import Parse.State.*
-import Parse.TERM_STATE.*
+package parse
+
+import index.Index
+import parse.Parse.State.*
+import parse.Parse.TERM_STATE.IN_WORD
+import parse.Parse.TERM_STATE.NOT_IN_WORD
 import java.io.File
 import java.util.*
 

@@ -1,3 +1,7 @@
+import dictionary.*
+import index.InvertFileIndex
+import parse.Parse
+import rank.TFIDF
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -32,6 +36,7 @@ fun main(args: Array<String>) {
 
     measureTimeMillis {
         TFIDF.rank(dictionary, documentLengths, args.filterNot { '-' in it }.map(String::toLowerCase))
+                .take(10)
                 .forEach(::println)
 
     }.let { println("Search complete in $it milliseconds.") }

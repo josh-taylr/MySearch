@@ -1,3 +1,5 @@
+package util
+
 fun cleanTerm(term: String): String? = term
         .toLowerCase()
         .filter(Char::isLetter)

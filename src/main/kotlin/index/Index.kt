@@ -1,3 +1,5 @@
+package index
+
 interface Index {
     fun beginIndexing()
 

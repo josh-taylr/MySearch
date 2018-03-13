@@ -1,3 +1,5 @@
+package dictionary
+
 data class DocumentNumber(val value: Long) {
 
     override fun toString(): String {

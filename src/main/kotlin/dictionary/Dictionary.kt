@@ -1,4 +1,12 @@
+package dictionary
+
 import java.util.*
+
+const val BYTE_SIZE = 8
+const val INT_SIZE  = 32
+const val LONG_SIZE = 64
+
+const val EOF = -1
 
 typealias Dictionary = Map<String, Postings>
 
@@ -67,9 +75,9 @@ infix fun Postings.intersect(other: Postings): Postings {
 }
 
 /**
- * Return every posting from this collections plus every posting from the other collection.
+ * Return every posting from this dictionary plus every posting from the other collection.
  *
- * When postings for the same document exist in both collections returned posting contains a posting for
+ * When postings for the same document exist in both dictionary returned posting contains a posting for
  * that document with the sum of the two term frequencies.
  */
 //TODO write tests

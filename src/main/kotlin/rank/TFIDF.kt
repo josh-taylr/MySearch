@@ -1,3 +1,10 @@
+package rank
+
+import dictionary.Dictionary
+import dictionary.DocumentNumber
+import dictionary.Posting
+import dictionary.emptyPostings
+
 object TFIDF : RankingStrategy {
 
     override fun rank(dictionary: Dictionary,

@@ -1,3 +1,5 @@
+package dictionary
+
 import java.io.DataInput
 import java.io.DataOutput
 

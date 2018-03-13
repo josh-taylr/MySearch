@@ -1,7 +1,9 @@
+package dictionary
+
 import java.io.File
+
 import java.io.RandomAccessFile
 import java.util.*
-
 class FileDictionaryReader {
 
     fun readDictionary(file: File): NavigableMap<String, DictionaryBlock> {
