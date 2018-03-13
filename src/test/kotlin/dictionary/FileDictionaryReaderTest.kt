@@ -1,3 +1,5 @@
+package dictionary
+
 import org.junit.Test
 import java.io.File
 import java.util.*

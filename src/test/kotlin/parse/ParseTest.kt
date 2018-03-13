@@ -1,6 +1,9 @@
+package parse
+
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
+import index.Index
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -11,7 +14,7 @@ import org.junit.rules.ExpectedException
 
 class ParseTest {
 
-    private val file = File("src/test/kotlin/single_document.xml")
+    private val file = File("src/test/kotlin/parse/single_document.xml")
     private val index = mock<Index>()
     private val inOrder = inOrder(index)
 
@@ -80,6 +83,6 @@ class ParseTest {
         thrown.expect(Parse.Companion.TagMismatchException::class.java)
         thrown.expectMessage("Expected 'DOCNO' new, but encountered 'DOC'")
         //when
-        parser.parse(File("src/test/kotlin/mismatched_tags.xml"))
+        parser.parse(File("src/test/kotlin/parse/mismatched_tags.xml"))
     }
 }

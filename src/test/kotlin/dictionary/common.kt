@@ -1,3 +1,5 @@
+package dictionary
+
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 
