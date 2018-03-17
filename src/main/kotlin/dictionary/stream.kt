@@ -22,9 +22,15 @@ fun DataOutput.writePosting(posting: Posting): Int = posting.let { (dn, tf)->
 }
 
 fun DataOutput.writeEncodedPostings(postings: Postings): Long {
-    val bytes = VariableByte.encode(postings.flatMap { listOf(it.documentNumber.value, it.termFrequency.toLong()) })
-    write(bytes.toByteArray())
-    return bytes.size.toLong()
+    val documentNumbers = postings.map { it.documentNumber.value }
+    val documentBytes = VariableByte.encode(documentNumbers)
+    write(documentBytes.toByteArray())
+
+    val termFrequencies = postings.map { it.termFrequency.toLong() }
+    val tfBytes = VariableByte.encode(termFrequencies)
+    write(tfBytes.toByteArray())
+
+    return documentBytes.size.toLong() + tfBytes.size.toLong()
 }
 
 fun DataInput.readPostings(size: Long): Postings {
@@ -47,11 +53,12 @@ fun DataInput.readEncodedPostings(size: Long): Postings {
         bytes += readByte()
     }
     val numbers = VariableByte.decode(bytes)
-    val postings = mutablePostingsOf()
-    for (i in 0 until numbers.size step 2) {
-        postings += Posting(DocumentNumber(numbers[i]), numbers[i+1].toInt())
+    val documentNumbers = numbers.take(numbers.size / 2)
+    val termFrequencies = numbers.takeLast(numbers.size / 2)
+
+    return MutablePostings().apply {
+        addAll(documentNumbers.zip(termFrequencies) { doc, tf -> Posting(DocumentNumber(doc), tf.toInt()) })
     }
-    return postings
 }
 
 fun DataOutput.writeTerm(term: String) {
