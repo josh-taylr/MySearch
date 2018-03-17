@@ -4,7 +4,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import org.hamcrest.collection.IsIterableContainingInOrder.contains as matchOrder
 
-class VariableByteEncodingTest {
+class VariableByteTest {
 
     private val vb = VariableByte
 
