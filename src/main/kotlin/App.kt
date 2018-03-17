@@ -14,9 +14,11 @@ fun main(args: Array<String>) {
         dictionaryFile.delete()
         File(INDEX_DIR).mkdirs()
         println("Build index...")
-        Parse(InvertFileIndex({ result: Dictionary ->
-            FileDictionaryWriter().write(result, dictionaryFile)
-        })).parse(wsjCollection)
+        measureTimeMillis {
+            Parse(InvertFileIndex({ result: Dictionary ->
+                FileDictionaryWriter().write(result, dictionaryFile)
+            })).parse(wsjCollection)
+        }.let { println("Index built in $it milliseconds.") }
     }
 
     val dictionary : FileDictionary = run {
