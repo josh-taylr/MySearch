@@ -1,10 +1,11 @@
 package dictionary
 
+import java.io.DataInput
 import java.io.File
-
 import java.io.RandomAccessFile
 import java.util.*
-class FileDictionaryReader {
+
+class FileDictionaryReader(internal val readPostings: DataInput.(size: Long) -> Postings = DataInput::readEncodedPostings) {
 
     fun readDictionary(file: File): NavigableMap<String, DictionaryBlock> {
         val map = mutableMapOf<String, DictionaryBlock>()
@@ -43,7 +44,7 @@ class FileDictionaryReader {
     fun readPostings(file: File, block: PostingsBlock): Postings {
         return RandomAccessFile(file, "r").run {
             seek(block.position)
-            readPostings(block.size)
+            this.readPostings(block.size)
         }
     }
 

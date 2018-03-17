@@ -1,10 +1,9 @@
 package dictionary
 
-import java.io.DataOutputStream
-import java.io.File
-import java.io.RandomAccessFile
+import java.io.*
 
-class FileDictionaryWriter(private val blockSize: Int = 1000) {
+class FileDictionaryWriter(private val blockSize: Int = 1000,
+                           internal val writePostings: DataOutput.(postings: Postings) -> Long = DataOutput::writeEncodedPostings) {
 
     private val termInfoSize = (BYTE_SIZE + LONG_SIZE + LONG_SIZE) / BYTE_SIZE
 
@@ -16,7 +15,7 @@ class FileDictionaryWriter(private val blockSize: Int = 1000) {
             writeLong(Long.MAX_VALUE)
             // write the sequence of postings
             dictionary.forEach { (_, postings) ->
-                postingsSize += writePostings(postings)
+                postingsSize += this.writePostings(postings)
             }
             // write terms with posting location and count
             val nodeData = ArrayList<TermData>()

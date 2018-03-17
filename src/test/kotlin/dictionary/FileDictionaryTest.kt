@@ -1,6 +1,7 @@
 package dictionary
 
 import org.junit.Test
+import java.io.DataInput
 import java.io.File
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -8,7 +9,7 @@ import kotlin.test.assertEquals
 
 class FileDictionaryTest {
 
-    private val reader = FileDictionaryReader()
+    private val reader = FileDictionaryReader(DataInput::readPostings)
     private val file = File("/tmp/dictionary_file.dat")
     private val dictionary = FileDictionary(file, reader)
 

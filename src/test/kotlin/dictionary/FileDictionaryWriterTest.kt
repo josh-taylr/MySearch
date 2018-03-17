@@ -2,6 +2,7 @@ package dictionary
 
 import org.junit.Assert.assertArrayEquals
 import org.junit.Test
+import java.io.DataOutput
 import java.io.File
 
 class FileDictionaryWriterTest {
@@ -11,7 +12,7 @@ class FileDictionaryWriterTest {
     @Test
     fun write() {
         //when
-        FileDictionaryWriter(2).write(testDictionary, file)
+        FileDictionaryWriter(2, DataOutput::writePostings).write(testDictionary, file)
         //then
         val readBytes = file.readBytes()
         val testDictionaryBytes1 = testDictionaryBytes
