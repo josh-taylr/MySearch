@@ -30,6 +30,7 @@ dependencies {
     testCompile 'junit:junit:4.11'
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testCompile "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
 
 task wrapper(type: Wrapper) {
