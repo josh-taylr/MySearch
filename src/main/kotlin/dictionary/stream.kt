@@ -1,6 +1,8 @@
 package dictionary
 
 import encode.VariableByte
+import encode.diffs
+import encode.expandDiffs
 import java.io.DataInput
 import java.io.DataOutput
 
@@ -22,11 +24,13 @@ fun DataOutput.writePosting(posting: Posting): Int = posting.let { (dn, tf)->
 }
 
 fun DataOutput.writeEncodedPostings(postings: Postings): Long {
-    val documentNumbers = postings.map { it.documentNumber.value }
-    val documentBytes = VariableByte.encode(documentNumbers)
+    val sorted = postings.sortedBy { it.documentNumber.value }
+
+    val documentNumbers = sorted.map { it.documentNumber.value }
+    val documentBytes = VariableByte.encode(documentNumbers.diffs())
     write(documentBytes.toByteArray())
 
-    val termFrequencies = postings.map { it.termFrequency.toLong() }
+    val termFrequencies = sorted.map { it.termFrequency.toLong() }
     val tfBytes = VariableByte.encode(termFrequencies)
     write(tfBytes.toByteArray())
 
@@ -53,7 +57,7 @@ fun DataInput.readEncodedPostings(size: Long): Postings {
         bytes += readByte()
     }
     val numbers = VariableByte.decode(bytes)
-    val documentNumbers = numbers.take(numbers.size / 2)
+    val documentNumbers = numbers.take(numbers.size / 2).expandDiffs()
     val termFrequencies = numbers.takeLast(numbers.size / 2)
 
     return MutablePostings().apply {

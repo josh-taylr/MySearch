@@ -40,6 +40,5 @@ fun main(args: Array<String>) {
         TFIDF.rank(dictionary, documentLengths, args.filterNot { '-' in it }.map(String::toLowerCase))
                 .take(10)
                 .forEach(::println)
-
     }.let { println("Search complete in $it milliseconds.") }
 }
