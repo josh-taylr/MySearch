@@ -19,23 +19,33 @@ class VariableByteTest {
     }
 
     @Test
-    fun encodeOneByte() {
+    fun encodeMaxOneByte() {
         //given
-        val number = 109L
+        val maxByte = 0b0111_1111.toLong()
         //when
-        val bytes= vb.encode(number)
+        val bytes = vb.encode(maxByte)
         //then
-        assertThat(bytes, matchOrder(0b1110_1101.toByte()))
+        assertThat(bytes, matchOrder(0b1111_1111.toByte()))
     }
 
     @Test
-    fun encodeMultiBytes() {
+    fun encodeMinTwoByte() {
+        //given
+        val minTwoByte = 0b1000_0000.toLong()
+        //when
+        val bytes = vb.encode(minTwoByte)
+        //then
+        assertThat(bytes, matchOrder(0b0000_0001.toByte(), 0b1000_0000.toByte()))
+    }
+
+    @Test
+    fun encodeMultiByte() {
         //given
         val num = 129L
         //when
         val bytes = vb.encode(num)
         //then
-        assertThat(bytes, matchOrder(0b0000_0001.toByte(), 0b1000_0001.toByte()))
+        assertThat(bytes, matchOrder<Byte>(0b0000_0001.toByte(), 0b1000_0001.toByte()))
     }
 
     @Test
@@ -87,7 +97,7 @@ class VariableByteTest {
         //when
         val numbers: List<Long> = vb.decode(bytes)
         //then
-        assertThat(numbers, matchOrder(0L))
+        assertEquals(listOf(0L), numbers)
     }
 
     @Test

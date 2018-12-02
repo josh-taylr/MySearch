@@ -1,23 +1,18 @@
 package encode
 
-import kotlin.experimental.and
-import kotlin.experimental.or
-
 object VariableByte : NumberEncoder {
 
-    private const val MAX_BYTE = 0b10000000
-    private const val MAX_BYTE_MASK: Byte = 0b01111111
-
-    override fun encode(numbers: Iterable<Long>): List<Byte> = numbers.flatMap(this::encode)
+    private const val MAX_BYTE: UByte = 0b1000_0000u
 
     override fun decode(bytes: Iterable<Byte>): List<Long> {
         val numbers = mutableListOf<Long>()
         var n = 0L
         bytes.forEach { byte ->
-            if (!byte.highOrderBit()) {
-                n = MAX_BYTE * n + byte
+            val uByte = byte.toUByte()
+            if (uByte < MAX_BYTE) {
+                n = MAX_BYTE.toLong() * n + uByte.toLong()
             } else {
-                n = MAX_BYTE * n + byte.withHighOrderBit(false)
+                n = MAX_BYTE.toLong() * n + (uByte xor MAX_BYTE).toLong()
                 numbers.add(n)
                 n = 0L
             }
@@ -25,22 +20,17 @@ object VariableByte : NumberEncoder {
         return numbers
     }
 
+    override fun encode(numbers: Iterable<Long>): List<Byte> = numbers.flatMap(this::encode)
+
     internal fun encode(number: Long): List<Byte> {
         var num = number
-        val bytes = mutableListOf<Byte>()
+        val bytes = mutableListOf<UByte>()
         do {
-            bytes += (num % MAX_BYTE).toByte()
-            num /= MAX_BYTE
+            bytes += (num % MAX_BYTE.toLong()).toUByte()
+            num /= MAX_BYTE.toLong()
         } while (num > 0)
+        bytes[0] = bytes[0] or MAX_BYTE
         bytes.reverse()
-        bytes[bytes.lastIndex] = bytes[bytes.lastIndex].withHighOrderBit(true)
-        return bytes
-    }
-
-    private fun Byte.highOrderBit(): Boolean = (this and MAX_BYTE.toByte()).toInt() != 0
-
-    private fun Byte.withHighOrderBit(high: Boolean): Byte = when (high) {
-        true -> this or MAX_BYTE.toByte()
-        false -> this and  MAX_BYTE_MASK
+        return bytes.map(UByte::toByte)
     }
 }
