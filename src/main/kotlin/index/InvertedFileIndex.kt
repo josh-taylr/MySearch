@@ -44,7 +44,7 @@ open class InvertFileIndex(private val indexWriter: (Dictionary) -> Unit) : Inde
         } else if ("TEXT" == tags.peek()) {
             termCount++
             cleanTerm(term)?.let { clean: String ->
-                if (null == documentNumber) throw IllegalStateException("Adding te rm from unknown document")
+                if (null == documentNumber) throw IllegalStateException("Adding term from unknown document")
                 dictionary.getOrPut(clean, { MutablePostings() }).add(documentNumber!!)
             }
         }

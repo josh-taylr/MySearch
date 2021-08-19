@@ -10,6 +10,11 @@ object TFIDF : RankingStrategy {
     override fun rank(dictionary: Dictionary,
                       documentLength: Map<DocumentNumber, Int>,
                       terms: Iterable<String>): List<Result> {
+
+        if (terms.count() == 0) {
+            return emptyList()
+        }
+
         return terms.map { term ->
             val postings = dictionary.getOrDefault(term, emptyPostings())
             postings.map { posting ->
