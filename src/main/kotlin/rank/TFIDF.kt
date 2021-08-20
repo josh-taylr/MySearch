@@ -38,7 +38,7 @@ object TFIDF : RankingStrategy {
         return posting.termFrequency.toDouble() / documentLength.invoke(posting.documentNumber).toDouble()
     }
 
-    private inline fun inverseDocumentFrequency(term: String, documents: Int, withTerm: (String) -> Int): Double {
-        return 1.0 / (documents.toDouble() / withTerm.invoke(term).toDouble())
+    private inline fun inverseDocumentFrequency(term: String, documents: Int, documentsContainingTerm: (String) -> Int): Double {
+        return 1/(documentsContainingTerm(term) / documents.toDouble())
     }
 }
