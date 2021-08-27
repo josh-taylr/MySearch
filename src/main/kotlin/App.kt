@@ -1,5 +1,6 @@
 import dictionary.*
 import index.InvertFileIndex
+import kotlinx.coroutines.*
 import parse.Parse
 import rank.TFIDF
 import java.io.File
@@ -8,17 +9,26 @@ import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
 
-    val dictionaryFile = File("$INDEX_DIR/dictionary.dat")
-    val wsjCollection = File(WSJ_FILE)
+    val dicDirectory = File(INDEX_DIR)
+    val wsjShards = List(ShardCount) { File(WSJ_SHARDS, "shard-$it.xml") }
 
-    if (args.contains("--build") || !dictionaryFile.exists()) {
-        dictionaryFile.delete()
+    val indexerScope = CoroutineScope(Job() + Dispatchers.IO + CoroutineName("indexer parent"))
+    val searchScope = CoroutineScope(Job() + Dispatchers.IO + CoroutineName("search parent"))
+
+    if (args.contains("--build")) {
         File(INDEX_DIR).mkdirs()
         println("Build index...")
         measureTimeMillis {
-            Parse(InvertFileIndex({ result: Dictionary ->
-                FileDictionaryWriter().write(result, dictionaryFile)
-            })).parse(wsjCollection)
+            runBlocking {
+                val jobs = wsjShards.mapIndexed { i, file ->
+                    indexerScope.launch {
+                        Parse(InvertFileIndex({ result: Dictionary ->
+                            FileDictionaryWriter().write(result, File(dicDirectory, "shard-$i.dat"))
+                        })).parse(file)
+                    }
+                }
+                jobs.joinAll()
+            }
         }.let {
             val duration = Duration.ofMillis(it)
             println("Index built in ${duration.seconds} seconds.")
@@ -28,7 +38,7 @@ fun main(args: Array<String>) {
     val dictionary : FileDictionary = run {
         var value: FileDictionary? = null
         measureTimeMillis {
-            value = FileDictionary(dictionaryFile, FileDictionaryReader())
+            value = FileDictionary(File(dicDirectory, "shard-0.dat"), FileDictionaryReader())
         }.let { println("Index read in $it milliseconds.") }
         return@run value!!
     }
